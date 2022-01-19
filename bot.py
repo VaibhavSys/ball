@@ -9,8 +9,8 @@ from discord.ext import commands, tasks
 from discord.ext.commands import has_permissions,  CheckFailure, check
 import json
 
+TOKEN = os.environ['TOKEN']
 client = discord.Client()
-
 client = commands.Bot(command_prefix = '-') #put your own prefix here
 
 @client.event
@@ -69,5 +69,5 @@ async def rmrole(ctx, user: discord.Member, role: discord.Role):
     await ctx.send(f"hey {ctx.author.name}, {user.name} has been removed from a role called: {role.name}")
 
 keep_alive.keep_alive()
-client.run("TOKEN") 
+client.run(os.environ['TOKEN']) 
 
