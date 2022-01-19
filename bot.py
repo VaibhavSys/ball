@@ -15,8 +15,8 @@ client = commands.Bot(command_prefix = '-') #put your own prefix here
 
 @client.event
 async def on_ready():
-    print("Bot is online!") 
-
+    print("Bot is online.") 
+    
     
 @client.command()
 async def ping(ctx):
@@ -68,6 +68,12 @@ async def rmrole(ctx, user: nextcord.Member, role: nextcord.Role):
     await user.remove_roles(role)
     await ctx.send(f"hey {ctx.author.name}, {user.name} has been removed from a role called: {role.name}")
 
+@client.command()
+@commands.is_owner()
+async def shutdown(ctx):
+    print("Shutting down bot...")
+    await client.close()
+
 keep_alive.keep_alive()
-client.run(os.environ['TOKEN']) 
+client.run(TOKEN) 
 
