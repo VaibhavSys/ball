@@ -1,16 +1,16 @@
 import keep_alive
 import requests
-import discord
+import nextcord
 import os
 import time
-import discord.ext
-from discord.utils import get
-from discord.ext import commands, tasks
-from discord.ext.commands import has_permissions,  CheckFailure, check
+import nextcord.ext
+from nextcord.utils import get
+from nextcord.ext import commands, tasks
+from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 
 TOKEN = os.environ['TOKEN']
-client = discord.Client()
+client = nextcord.Client()
 client = commands.Bot(command_prefix = '-') #put your own prefix here
 
 @client.event
@@ -23,7 +23,7 @@ async def ping(ctx):
     await ctx.send("pong!") 
 
 @client.command()
-async def kick(ctx, member: discord.Member, *, reason=None):
+async def kick(ctx, member: nextcord.Member, *, reason=None):
     await member.kick(reason=reason)
     await ctx.send(f'User {member} has kicked.')
 
@@ -40,7 +40,7 @@ async def joke(ctx):
 #The below code bans player.
 @client.command()
 @commands.has_permissions(ban_members = True)
-async def ban(ctx, member : discord.Member, *, reason = None):
+async def ban(ctx, member : nextcord.Member, *, reason = None):
     await member.ban(reason = reason)
 
 #The below code unbans player.
@@ -59,12 +59,12 @@ async def unban(ctx, *, member):
             return
 
 @client.command()
-async def addrole(ctx, user: discord.Member, role: discord.Role):
+async def addrole(ctx, user: nextcord.Member, role: nextcord.Role):
     await user.add_roles(role)
     await ctx.send(f"hey {ctx.author.name}, {user.name} has been giving a role called: {role.name}")
 
 @client.command()
-async def rmrole(ctx, user: discord.Member, role: discord.Role):
+async def rmrole(ctx, user: nextcord.Member, role: nextcord.Role):
     await user.remove_roles(role)
     await ctx.send(f"hey {ctx.author.name}, {user.name} has been removed from a role called: {role.name}")
 
