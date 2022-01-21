@@ -22,11 +22,6 @@ async def ping(ctx):
     await ctx.send(f'Pong! {round (bot.latency * 1000)} ms')
 
 @bot.command()
-async def kick(ctx, member: nextcord.Member, *, reason=None):
-    await member.kick(reason=reason)
-    await ctx.send(f'User {member} has kicked.')
-
-@bot.command()
 async def sayhi(ctx):
   await ctx.send("Hello! I am a helikopter which will take you whereever you want.")
 
