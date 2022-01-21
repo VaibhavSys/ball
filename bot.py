@@ -10,7 +10,7 @@ from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 
 TOKEN = os.environ['TOKEN']
-bot = commands.Bot(command_prefix = '-') #put your own prefix here
+bot = commands.Bot(command_prefix = '-') 
 
 @bot.event
 async def on_ready():
