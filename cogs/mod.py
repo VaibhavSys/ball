@@ -10,9 +10,9 @@ class Mod(commands.Cog):
 		self.bot = bot
 
 	@commands.command(pass_context=True)
-	async def addrole(self, ctx, user: nextcord.Member, roles: nextcord.Role):
-		await bot.add_roles(member, roles)
-		await ctx.send(f"{user.name} has been given role(s) {role.name} by {ctx.author.name}")
+	async def addrole(self, ctx : commands.Context, member: nextcord.Member, roles: nextcord.Role):
+		await member.add_roles(roles)
+		await ctx.send(f"{member.name} has been given role(s) {role.name} by {ctx.author.name}")
 		
 	@commands.command(pass_context=True)
 	async def kick(self, ctx : commands.Context, member: nextcord.Member, *, reason=None):
