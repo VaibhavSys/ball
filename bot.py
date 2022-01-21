@@ -15,11 +15,11 @@ bot = commands.Bot(command_prefix = '-') #put your own prefix here
 @bot.event
 async def on_ready():
     print("Bot is online.") 
-    
+
     
 @bot.command()
 async def ping(ctx):
-    await ctx.send("pong!") 
+    await ctx.send(f'Pong! {round (bot.latency * 1000)} ms')
 
 @bot.command()
 async def kick(ctx, member: nextcord.Member, *, reason=None):
@@ -57,10 +57,6 @@ async def unban(ctx, *, member):
             await ctx.send(f'Unbanned {user.mention}')
             return
 
-@bot.command()
-async def addrole(ctx, user: nextcord.Member, role: nextcord.Role):
-    await user.add_roles(role)
-    await ctx.send(f"hey {ctx.author.name}, {user.name} has been giving a role called: {role.name}")
 
 @bot.command()
 async def rmrole(ctx, user: nextcord.Member, role: nextcord.Role):
@@ -73,6 +69,11 @@ async def shutdown(ctx):
     print("Shutting down bot...")
     await bot.close()
 
+for file in os.listdir("./cogs"): 
+    if file.endswith(".py"): 
+        name = file[:-3] 
+        bot.load_extension(f"cogs.{name}")
+        
 keep_alive.keep_alive()
 bot.run(TOKEN) 
 
