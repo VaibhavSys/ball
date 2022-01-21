@@ -21,8 +21,25 @@ class Mod(commands.Cog):
 	@commands.command(pass_context=True)
 	async def kick(self, ctx, member: nextcord.Member, *, reason=None):
 		await ctx.guild.kick(user=member, reason=reason)
-		await ctx.send(f'User {member}) has kicked by {ctx.author.mention} with reason "{reason}".')
+		await ctx.send(f"User {member}({member.id})) has kicked by {ctx.author.mention} with reason '{reason}''.")
 	
+	@commands.command(pass_context=True)
+	async def ban(self, ctx, member : nextcord.Member, *, reason=None):
+		await member.ban(reason=reason)
+		await ctx.send(f"{member} has been banned by {ctx.author.mention} with reason '{reason}'.")
+		
+	@commands.command(pass_context=True)
+	async def unban(self, ctx, *, member, reason=None):
+		banned_users = await ctx.guild.bans()
+		member_name, member_discriminator = member.split("#")
+
+		for ban_entry in banned_users:
+			user = ban_entry.user
+
+			if (user.name, user.discriminator) == (member_name, member_discriminator):
+				await ctx.guild.unban(user, reason=reason)
+				await ctx.send(f"{user.name}#{user.discriminator} has been unbanned by {ctx.author.mention} with reason '{reason}'")
+
 	
 def setup(bot):
 	bot.add_cog(Mod(bot))
