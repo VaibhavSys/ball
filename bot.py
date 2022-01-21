@@ -52,12 +52,6 @@ async def unban(ctx, *, member):
             await ctx.send(f'Unbanned {user.mention}')
             return
 
-
-@bot.command()
-async def rmrole(ctx, user: nextcord.Member, role: nextcord.Role):
-    await user.remove_roles(role)
-    await ctx.send(f"hey {ctx.author.name}, {user.name} has been removed from a role called: {role.name}")
-
 @bot.command()
 @commands.is_owner()
 async def shutdown(ctx):
