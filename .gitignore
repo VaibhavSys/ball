@@ -1,2 +1,4 @@
 __pycache__/
 nextcord.log
+poetry.lock
+pyproject.toml
