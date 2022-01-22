@@ -61,7 +61,9 @@ class Mod(commands.Cog):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
 			await ctx.send("I do not have the requried permissions to do that, the member you are trying to kick has a role higher than the bot's highest role or I have not been granted the permission Kick Members.")
-	
+	else:
+			await ctx.send("Kick Failed")
+			
 	@commands.command(pass_context=True)
 	@commands.has_permissions(ban_members=True)
 	async def ban(self, ctx, member : nextcord.Member, *, reason=None):
@@ -76,7 +78,9 @@ class Mod(commands.Cog):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
 			await ctx.send("I do not have the requried permissions to do that, the member you are trying to ban has a role higher than the bot's highest role or I have not been granted the permission Ban Members.")
-		
+		else:
+			await ctx.send("Ban Failed")
+			
 	@commands.command(pass_context=True)
 	@commands.has_permissions(ban_members=True)
 	async def unban(self, ctx, *, member, reason=None):
