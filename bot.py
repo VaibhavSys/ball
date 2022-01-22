@@ -8,13 +8,21 @@ from nextcord.utils import get
 from nextcord.ext import commands, tasks
 from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
+import logging
 
 TOKEN = os.environ['TOKEN']
-bot = commands.Bot(command_prefix = '-') 
+bot = commands.Bot(command_prefix = '-')
+ 
+#Logging Setup
+logger = logging.getLogger('nextcord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='nextcord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 @bot.event
 async def on_ready():
-    print("Bot is online.") 
+    print(f"----------\nLogged in as {bot.user.name}({bot.user.id})\n----------") 
 
     
 @bot.command()
