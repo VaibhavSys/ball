@@ -61,7 +61,7 @@ class Mod(commands.Cog):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
 			await ctx.send("I do not have the requried permissions to do that, the member you are trying to kick has a role higher than the bot's highest role or I have not been granted the permission Kick Members.")
-	else:
+		else:
 			await ctx.send("Kick Failed")
 			
 	@commands.command(pass_context=True)
