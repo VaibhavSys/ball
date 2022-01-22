@@ -2,7 +2,8 @@ import nextcord.ext
 import nextcord.utils 
 from nextcord.ext import commands, tasks
 
-bot = commands.Bot(command_prefix = '-')
+dfprefix = "-"
+bot = commands.Bot(command_prefix = dfprefix)
 
 class Mod(commands.Cog):
 	def __init__(self, bot):
@@ -13,12 +14,34 @@ class Mod(commands.Cog):
 	async def addrole(self, ctx, member: nextcord.Member, roles: nextcord.Role):
 		await member.add_roles(roles)
 		await ctx.send(f"{member.mention} has been given role(s) {roles.name}({roles.id}) by {ctx.author.mention}")
-	
+
+	@addrole.error
+	async def addrole_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingPermissions):
+			await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Manage Roles) to use this command.")
+		elif isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		elif isinstance(error, commands.errors.CommandInvokeError):
+			await ctx.send("I do not have the required permissions to do that, either the role/member you are trying to add the role to has a role higher than the bot's highest role or the role you are trying to add is higher than the bot's highest role or I have not been granted the Manage Roles permission.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}addrole <member> <role>'")
+			
 	@commands.command(pass_context=True)
 	@commands.has_permissions(manage_roles=True)
 	async def rmrole(self, ctx, member: nextcord.Member, roles: nextcord.Role):
 		await member.remove_roles(roles)
 		await ctx.send(f"{member.mention} has been removed from {roles.name}({roles.id}) role(s) by {ctx.author.mention}")
+	
+	@rmrole.error
+	async def rmrole_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingPermissions):
+			await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Manage Roles) to use this command.")
+		elif isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		elif isinstance(error, commands.errors.CommandInvokeError):
+			await ctx.send("I do not have the required permissions to do that, either the role/member you are trying to remove the role from has a role higher than the bot's highest role or the role you are trying to remove is higher than the bot's highest role or I have not been granted the Manage Roles permission.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}rmrole <member> <role>'")
 		
 	@commands.command(pass_context=True)
 	@commands.has_permissions(kick_members=True)
