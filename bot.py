@@ -1,3 +1,4 @@
+import keep_alive
 import requests
 import nextcord
 import os
@@ -52,6 +53,6 @@ for file in os.listdir("./cogs"):
     if file.endswith(".py"): 
         name = file[:-3] 
         bot.load_extension(f"cogs.{name}")
-        
+keep_alive.keep_alive()
 bot.run(TOKEN) 
 
