@@ -46,9 +46,10 @@ class Mod(commands.Cog):
 			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}rmrole <member> <role>'")
 		else:
 			await ctx.send("Removing role Failed")
+			
 	@commands.command(pass_context=True)
 	@commands.has_permissions(manage_messages=True)
-	async def mute(self, ctx, user : nextcord.Member, reason=None):
+	async def mute(self, ctx, user : nextcord.Member,*,  reason=None):
 		guild = ctx.author.guild
 		role = nextcord.utils.get(guild.roles, name="Muted") 
 		hell = nextcord.utils.get(guild.text_channels, name="hell") 
@@ -62,10 +63,10 @@ class Mod(commands.Cog):
 			except nextcord.Forbidden:
 				return await ctx.send("I have no permissions to make a muted role") 
 				await user.add_roles(muted) 
-				await ctx.send(f"{user.mention} has been sent to hell for {reason}")
+				await ctx.send(f"{user.mention} has been sent to hell by {ctx.author.mention} with reason '{reason}'")
 		else:
 			await user.add_roles(role) 
-			await ctx.send(f"{user.mention} has been sent to hell for {reason}")
+			await ctx.send(f"{user.mention} has been sent to hell by {ctx.author.mention} with reason '{reason}'")
 	       
 		if not hell: 
 			overwrites = {guild.default_role: nextcord.PermissionOverwrite(read_message_history=False),
@@ -75,7 +76,22 @@ class Mod(commands.Cog):
 				channel = await guild.create_text_channel('hell', overwrites=overwrites)
 				await channel.send("Welcome to hell. You will spend your time here until you get unmuted. Enjoy the silence (or have fun talking with other people in hell).")
 			except nextcord.Forbidden:
-				return await ctx.send("I have no permissions to make #hell")
+				return await ctx.send("I do not have enough permissions to make #hell (Manage Channels)")
+	
+	@mute.error
+	async def mute_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send("Please use the command like '{dprefix}mute <user> (reason)'")
+		elif isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		elif isinstance(error, commands.errors.CommandInvokeError):
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to mute has a role higher than me.")
+		else:
+			await ctx.send(f"Mute failed: {error}")
+	@commands.command()
+	async def unmute(self, ctx, user: nextcord.Member, reason=None):
+		await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted"))
+		await ctx.send(f"{user.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 	
 	@commands.command(pass_context=True)
 	@commands.has_guild_permissions(mute_members=True)
@@ -92,7 +108,7 @@ class Mod(commands.Cog):
 		elif isinstance(error, commands.errors.CommandInvokeError):
 			await ctx.send("I do not have the required permissions to do that, or the member you are trying to voice-mute has a role higher than me.")
 		else:
-			await ctx.send("Voice mute failed.")
+			await ctx.send(f"Voice-mute failed: {error}")
 		
 	@commands.command(pass_context=True)
 	@commands.has_guild_permissions(mute_members=True)
