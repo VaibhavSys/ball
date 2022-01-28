@@ -90,7 +90,7 @@ class Mod(commands.Cog):
 			await ctx.send(f"Mute failed: {error}")
 	@commands.command()
 	async def unmute(self, ctx, user: nextcord.Member, reason=None):
-		await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted"))
+		await user.remove_roles(nextcord.utils.get(ctx.guild.roles, name="Muted"))
 		await ctx.send(f"{user.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 	
 	@commands.command(pass_context=True)
