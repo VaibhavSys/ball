@@ -22,11 +22,11 @@ class Mod(commands.Cog):
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
-			await ctx.send("I do not have the required permissions to do that, either the member you are trying to add the role to has a role higher than the bot's highest role or the role you are trying to add is higher than the bot's highest role or I have not been granted the permission Manage Roles.")
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to add the role to has a role higher than me.")
 		elif isinstance(error, commands.errors.MissingRequiredArgument):
 			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}addrole <member> <role>'")
 		else:
-			await ctx.send("Command Failed")
+			await ctx.send("Adding role Failed")
 	
 	@commands.command(pass_context=True)
 	@commands.has_permissions(manage_roles=True)
@@ -41,12 +41,100 @@ class Mod(commands.Cog):
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
-			await ctx.send("I do not have the required permissions to do that, either the member you are trying to remove the role from has a role higher than the bot's highest role or the role you are trying to remove is higher than the bot's highest role or I have not been granted the permission Manage Roles.")
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to remove the role from has a role higher than me.")
 		elif isinstance(error, commands.errors.MissingRequiredArgument):
 			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}rmrole <member> <role>'")
 		else:
-			await ctx.send("Command Failed")
+			await ctx.send("Removing role Failed")
 			
+	@commands.command(pass_context=True)
+	@commands.has_permissions(manage_messages=True)
+	async def mute(self, ctx, user : nextcord.Member,*,  reason=None):
+		guild = ctx.author.guild
+		role = nextcord.utils.get(guild.roles, name="Muted") 
+		hell = nextcord.utils.get(guild.text_channels, name="hell") 
+		if not role:
+			try:  
+				muted = await guild.create_role(name="Muted", reason="To use for muting")
+				for channel in ctx.guild.channels:  
+					await channel.set_permissions(muted, send_messages=False,
+	                                              read_message_history=False,
+	                                              read_messages=False)
+			except nextcord.Forbidden:
+				return await ctx.send("I have no permissions to make a muted role") 
+				await user.add_roles(muted) 
+				await ctx.send(f"{user.mention} has been sent to hell by {ctx.author.mention} with reason '{reason}'")
+		else:
+			await user.add_roles(role) 
+			await ctx.send(f"{user.mention} has been sent to hell by {ctx.author.mention} with reason '{reason}'")
+	       
+		if not hell: 
+			overwrites = {guild.default_role: nextcord.PermissionOverwrite(read_message_history=False),
+	                      guild.me: nextcord.PermissionOverwrite(send_messages=True),
+	                      role: nextcord.PermissionOverwrite(read_message_history=True)} 
+			try: 
+				channel = await guild.create_text_channel('hell', overwrites=overwrites)
+				await channel.send("Welcome to hell. You will spend your time here until you get unmuted. Enjoy the silence (or have fun talking with other people in hell).")
+			except nextcord.Forbidden:
+				return await ctx.send("I do not have enough permissions to make #hell (Manage Channels)")
+	
+	@mute.error
+	async def mute_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send("Please use the command like '{dprefix}mute <user> (reason)'")
+		elif isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		elif isinstance(error, commands.errors.CommandInvokeError):
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to mute has a role higher than me.")
+		else:
+			await ctx.send(f"Mute failed: {error}")
+	@commands.command()
+	async def unmute(self, ctx, user: nextcord.Member, *, reason=None):
+		await user.remove_roles(nextcord.utils.get(ctx.guild.roles, name="Muted"))
+		await ctx.send(f"{user.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
+	
+	@unmute.error
+	async def unmute_error(self, ext, error):
+		if isinstance(errpr, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		else:
+			await ctx.send(f"Unmute failed: {error}")
+		
+	
+	@commands.command(pass_context=True)
+	@commands.has_guild_permissions(mute_members=True)
+	async def vcmute(self, ctx, member : nextcord.Member, *, reason=None):
+		await member.edit(mute = True)
+		await ctx.send(f"{member} has been successfully voice-muted by {ctx.author.mention} with reason '{reason}'")
+		
+	@vcmute.error
+	async def vcmute_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingPermissions):
+			await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Mute Members) to use this command.")
+		elif isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		elif isinstance(error, commands.errors.CommandInvokeError):
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to voice-mute has a role higher than me.")
+		else:
+			await ctx.send(f"Voice-mute failed: {error}")
+		
+	@commands.command(pass_context=True)
+	@commands.has_guild_permissions(mute_members=True)
+	async def vcunmute(self, ctx, member : nextcord.Member, *, reason=None):
+		await member.edit(mute = False)
+		await ctx.send(f"{member} has been successfully voice-unmuted by {ctx.author.mention} with reason '{reason}'")	
+	
+	@vcunmute.error
+	async def vcunmute_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingPermissions):
+			await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Mute Members) to use this command.")
+		elif isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		elif isinstance(error, commands.errors.CommandInvokeError):
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to voice-unmute has a role higher than me.")
+		else:
+			await ctx.send(f"Voice unmute failed: {error}")
+	
 	@commands.command(pass_context=True)
 	@commands.has_permissions(kick_members=True)
 	async def kick(self, ctx, member: nextcord.Member, *, reason=None):
@@ -60,7 +148,9 @@ class Mod(commands.Cog):
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
-			await ctx.send("I do not have the requried permissions to do that, the member you are trying to kick has a role higher than the bot's highest role or I have not been granted the permission Kick Members.")
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to kick has a role higher than me.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}kick <member> (reason)'")
 		else:
 			await ctx.send("Kick Failed")
 			
@@ -77,7 +167,9 @@ class Mod(commands.Cog):
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
-			await ctx.send("I do not have the requried permissions to do that, the member you are trying to ban has a role higher than the bot's highest role or I have not been granted the permission Ban Members.")
+			await ctx.send("I do not have the required permissions to do that, or the member you are trying to ban has a role higher than me.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}ban <member> (reason)'")		
 		else:
 			await ctx.send("Ban Failed")
 			
@@ -102,6 +194,8 @@ class Mod(commands.Cog):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		elif isinstance(error, commands.errors.CommandInvokeError):
 			await ctx.send("I do not have the requried permissions (Ban Members) to do that.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}unban <member> (reason)'")
 		else:
 			await ctx.send("Unban Failed")
 			
