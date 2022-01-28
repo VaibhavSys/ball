@@ -97,8 +97,6 @@ class Mod(commands.Cog):
 	async def unmute_error(self, ext, error):
 		if isinstance(errpr, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-		elif isinstance(error, commands.errors.MemberNotFound):
-			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		else:
 			await ctx.send(f"Unmute failed: {error}")
 		
