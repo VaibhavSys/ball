@@ -93,6 +93,16 @@ class Mod(commands.Cog):
 		await user.remove_roles(nextcord.utils.get(ctx.guild.roles, name="Muted"))
 		await ctx.send(f"{user.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 	
+	@unmute.error
+	async def unmute_error(self, ext, error):
+		if isinstance(errpr, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		elif isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+		else:
+			await ctx.send(f"Unmute failed: {error}")
+		
+	
 	@commands.command(pass_context=True)
 	@commands.has_guild_permissions(mute_members=True)
 	async def vcmute(self, ctx, member : nextcord.Member, *, reason=None):
@@ -125,7 +135,7 @@ class Mod(commands.Cog):
 		elif isinstance(error, commands.errors.CommandInvokeError):
 			await ctx.send("I do not have the required permissions to do that, or the member you are trying to voice-unmute has a role higher than me.")
 		else:
-			await ctx.send("Voice unmute failed.")
+			await ctx.send(f"Voice unmute failed: {error}")
 	
 	@commands.command(pass_context=True)
 	@commands.has_permissions(kick_members=True)
