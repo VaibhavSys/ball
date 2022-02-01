@@ -8,6 +8,7 @@ from nextcord.ext import commands, tasks
 from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 import logging
+#import keep_alive
 
 TOKEN = os.environ['TOKEN']
 bot = commands.Bot(command_prefix = '-')
@@ -52,6 +53,6 @@ for file in os.listdir("./cogs"):
     if file.endswith(".py"): 
         name = file[:-3] 
         bot.load_extension(f"cogs.{name}")
-        
+#keep_alive.keep_alive()        
 bot.run(TOKEN) 
 
