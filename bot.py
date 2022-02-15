@@ -25,9 +25,9 @@ async def on_ready():
     print(f"----------\nLogged in as {bot.user.name}({bot.user.id})\n----------") 
 
     
-@bot.command()
-async def ping(ctx):
-    await ctx.send(f'Pong! {round (bot.latency * 1000)} ms')
+# @bot.command()
+# async def ping(ctx):
+    # await ctx.send(f'Pong! {round (bot.latency * 1000)} ms')
 
 @bot.command()
 async def sayhi(ctx):
