@@ -1,9 +1,9 @@
 import nextcord.ext
 import nextcord.utils 
 from nextcord.ext import commands, tasks
+from datetime import timedelta
 
 dfprefix = "-"
-bot = commands.Bot(command_prefix = dfprefix)
 
 class Mod(commands.Cog):
 	def __init__(self, bot):
@@ -199,5 +199,72 @@ class Mod(commands.Cog):
 		else:
 			await ctx.send("Unban Failed")
 			
+	@commands.command(pass_context=True)
+	@commands.has_permissions(manage_messages=True)
+	async def lock(self, ctx, channel : nextcord.TextChannel = None):
+		try:
+			overwrite = channel.overwrites_for(ctx.guild.default_role)
+			overwrite.send_messages = False
+			await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
+			await ctx.send('Channel locked.')
+		except nextcord.Forbidden:
+			await ctx.send("I do not have enough permissions to perform this action.")
+			
+	@lock.error
+	async def lock_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingPermissions):
+			await ctx.send("You are missing Manage Messages permission(s) to run this command.")
+	
+	@commands.command(pass_context=True)
+	@commands.has_permissions(manage_messages=True)
+	async def unlock(self, ctx, channel : nextcord.TextChannel = None):
+		try:
+			overwrite = channel.overwrites_for(ctx.guild.default_role)
+			overwrite.send_messages = None
+			await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
+			await ctx.send('Channel unlocked.')	
+		except nextcord.Forbidden:
+			await ctx.send("I do not have enough permissions to perform this action.")
+		
+	@unlock.error
+	async def unlock_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingPermissions):
+			await ctx.send("You are missing Manage Messages permission(s) to run this command.")
+			
+	
+	@commands.command()
+	@commands.has_permissions(manage_messages=True)
+	async def purge(self, ctx, *, limit : int):
+		try:
+			await ctx.channel.purge(limit=limit)
+			await ctx.send(f"Purged {limit} messages.", delete_after=3)
+		except nextcord.Forbidden:
+			await ctx.send("I do not have enough permissions to perform this action.")
+		
+	@purge.error
+	async def purge_error(self, ctx, error):
+		if isinstance(error, commands.errors.MissingPermissions):
+			await ctx.send("You do not have enough permissions (Manage Messages) to do that")
+	
+	@commands.command()
+	@commands.guild_only()
+	@commands.bot_has_permissions(manage_channels=True)
+	async def slowmode(self, ctx, interval: int = 0, unit = "s"):
+		"""Changes channel's slowmode setting.
+		Interval can be anything from 0 seconds to 6 hours.
+		Use without parameters to disable.
+		"""
+		if unit == "s":
+			interval = timedelta(seconds=interval).total_seconds()
+		elif unit == "m":
+			interval = timedelta(minutes=interval).total_seconds()
+			
+		await ctx.channel.edit(slowmode_delay=interval)
+		if interval > 0:
+			await ctx.send(f"Slowmode interval is now {interval}.")
+		else:
+			await ctx.send("Slowmode has been disabled.")
+		
+	
 def setup(bot):
 	bot.add_cog(Mod(bot))

@@ -1,4 +1,3 @@
-import keep_alive
 import requests
 import nextcord
 import os
@@ -9,13 +8,14 @@ from nextcord.ext import commands, tasks
 from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 import logging
+#import keep_alive
 
 TOKEN = os.environ['TOKEN']
 bot = commands.Bot(command_prefix = '-')
  
 #Logging Setup
 logger = logging.getLogger('nextcord')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 handler = logging.FileHandler(filename='nextcord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
@@ -24,14 +24,10 @@ logger.addHandler(handler)
 async def on_ready():
     print(f"----------\nLogged in as {bot.user.name}({bot.user.id})\n----------") 
 
-    
-@bot.command()
-async def ping(ctx):
-    await ctx.send(f'Pong! {round (bot.latency * 1000)} ms')
 
 @bot.command()
 async def sayhi(ctx):
-  await ctx.send("Hello! I am a helikopter which will take you whereever you want.")
+  await ctx.send("Hello {ctx.author.mention}! My prefix is '-'.")
 
 @bot.command()
 async def joke(ctx):
@@ -39,9 +35,6 @@ async def joke(ctx):
     response = requests.get(url)
     o = json.loads(response.text)
     await ctx.send(o["value"])
-
-@commands.has_permissions(administrator = True)
-
 
 @bot.command()
 @commands.is_owner()
@@ -53,6 +46,8 @@ for file in os.listdir("./cogs"):
     if file.endswith(".py"): 
         name = file[:-3] 
         bot.load_extension(f"cogs.{name}")
+        print(f"Loaded cog {name}")
+        
 keep_alive.keep_alive()
 bot.run(TOKEN) 
 
