@@ -202,6 +202,7 @@ class Mod(commands.Cog):
 	@commands.command(pass_context=True)
 	@commands.has_permissions(manage_messages=True)
 	async def lock(self, ctx, channel : nextcord.TextChannel = None):
+		channel = channel or ctx.channel
 		try:
 			overwrite = channel.overwrites_for(ctx.guild.default_role)
 			overwrite.send_messages = False
@@ -218,6 +219,7 @@ class Mod(commands.Cog):
 	@commands.command(pass_context=True)
 	@commands.has_permissions(manage_messages=True)
 	async def unlock(self, ctx, channel : nextcord.TextChannel = None):
+		channel = channel or ctx.channel
 		try:
 			overwrite = channel.overwrites_for(ctx.guild.default_role)
 			overwrite.send_messages = None

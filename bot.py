@@ -8,7 +8,7 @@ from nextcord.ext import commands, tasks
 from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 import logging
-#import keep_alive
+import keep_alive
 
 TOKEN = os.environ['TOKEN']
 bot = commands.Bot(command_prefix = '-')
@@ -28,13 +28,6 @@ async def on_ready():
 @bot.command()
 async def sayhi(ctx):
   await ctx.send("Hello {ctx.author.mention}! My prefix is '-'.")
-
-@bot.command()
-async def joke(ctx):
-    url = 'https://api.chucknorris.io/jokes/random'
-    response = requests.get(url)
-    o = json.loads(response.text)
-    await ctx.send(o["value"])
 
 @bot.command()
 @commands.is_owner()
