@@ -32,6 +32,7 @@ class Danger(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def nuke(self, ctx):
         view = Confirm()
+        await ctx.send("NOTE: The bot's role should be on top to cause maximum damage!")
         await ctx.send("Are you sure that you want delete all channels in this server?", view=view)
         await view.wait()
 
@@ -48,6 +49,26 @@ class Danger(commands.Cog):
         else:
             await ctx.send("Cancelled.")
 
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def nuke_roles(self, ctx):
+        view = Confirm()
+        await ctx.send("NOTE: The bot's role should be on top to cause maximum damage!")
+        await ctx.send("Are you sure that you want to delete all roles in this guild?", view=view)
+        await view.wait()
+
+        if view.value is None:
+            await ctx.send("Timed out!")
+        elif view.value:
+            await ctx.send("Nuking roles...")
+            for role in ctx.guild.roles:
+                try:
+                    await role.delete()
+
+                except:
+                    await ctx.send(f"Unable to delete {role.name}!")
+        else:
+            await ctx.send("Cancelled.")
 
 def setup(bot):
     bot.add_cog(Danger(bot))
