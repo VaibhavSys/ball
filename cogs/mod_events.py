@@ -3,6 +3,13 @@ import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands, tasks
 
+
+class ModEvents(commands.Cog):
+	
+	def __init__(self, bot):
+		self.bot = bot
+	
+
 class modEvents(commands.Cog):
 	@commands.Cog.listener()
 	async def on_guild_channel_create(self, ctx):
