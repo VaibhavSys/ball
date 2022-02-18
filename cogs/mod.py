@@ -95,13 +95,6 @@ class Mod(commands.Cog):
 		else:
 			await ctx.send(f"Unmute failed: {error}")
 		
-	@commands.command()
-	@commands.has_permissions(manage_messages=True)
-	async def disablehell(self, ctx):
-		global nohell
-		nohell = True
-		await ctx.send("Succesfully disabled hell.")
-	
 	@commands.command(pass_context=True)
 	@commands.has_guild_permissions(mute_members=True)
 	async def vcmute(self, ctx, member : nextcord.Member, *, reason=None):

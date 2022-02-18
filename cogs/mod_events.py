@@ -3,7 +3,11 @@ import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands, tasks
 
-class modEvents(commands.Cog):
+class ModEvents(commands.Cog):
+	
+	def __init__(self, bot):
+		self.bot = bot
+	
 	@commands.Cog.listener()
 	async def on_guild_channel_create(self, ctx):
 		for channel in ctx.guild.channels:
@@ -11,4 +15,4 @@ class modEvents(commands.Cog):
 			await channel.set_permissions(muted, send_messages=False)
 	
 def setup(bot):
-	bot.add_cog(modEvents(bot))
+	bot.add_cog(ModEvents(bot))
