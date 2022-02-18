@@ -28,7 +28,7 @@ class Danger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(brief = "Deletes all channels in guild")
+    @commands.command(brief = "Deletes all channels in guild", description = "Deletes all roles in guild")
     @commands.has_permissions(administrator=True)
     async def nuke(self, ctx):
         view = Confirm()
@@ -49,7 +49,7 @@ class Danger(commands.Cog):
         else:
             await ctx.send("Cancelled.")
 
-    @commands.command(brief = "Deletes all roles in guild")
+    @commands.command(brief = "Deletes all roles in guild", description = "Deletes all roles in guild")
     @commands.has_permissions(administrator=True)
     async def nuke_roles(self, ctx):
         view = Confirm()
