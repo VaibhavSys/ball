@@ -29,7 +29,8 @@ class Danger(commands.Cog):
         self.bot = bot
 
     rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"
-
+    tmsg = "Timed out!"
+    
     @commands.command(brief = "Deletes all channels in guild")
     @commands.has_permissions(administrator=True)
     async def nuke(self, ctx):
@@ -39,7 +40,7 @@ class Danger(commands.Cog):
         await view.wait()
 
         if view.value is None:
-            await ctx.send("Timed out!")
+            await ctx.send(Danger.tmsg)
         elif view.value:
             await ctx.send("Nuking server...")
             for channel in ctx.guild.channels:
@@ -51,7 +52,7 @@ class Danger(commands.Cog):
         else:
             await ctx.send("Cancelled.")
 
-    @commands.command(brief = "Deletes all roles in guild")
+    @commands.command(brief = "Deletes all roles in guild", description = "Deletes all roles in guild")
     @commands.has_permissions(administrator=True)
     async def nuke_roles(self, ctx):
         view = Confirm()
@@ -60,7 +61,7 @@ class Danger(commands.Cog):
         await view.wait()
 
         if view.value is None:
-            await ctx.send("Timed out!")
+            await ctx.send(Danger.tmsg)
         elif view.value:
             await ctx.send("Nuking roles...")
             for role in ctx.guild.roles:
@@ -93,16 +94,16 @@ class Danger(commands.Cog):
         else:
             await ctx.send("Cancelled.")
 
-    @commands.command(brief = "Kicks all members in guild", description = "Kicks all members in guild")
-    @commands.has_permissions(administrator=True)
-    async def kickall(self, ctx):
-        for member.member in ctx.guild.fetch_members(limit=None):
-            try:
-            #await ctx.send(ctx.guild.members)
+#     @commands.command(brief = "Kicks all members in guild", description = "Kicks all members in guild")
+#     @commands.has_permissions(administrator=True)
+#     async def kickall(self, ctx):
+#         for member.member in ctx.guild.fetch_members(limit=None):
+#             try:
+#             await ctx.send(ctx.guild.members)
                 #await ctx.send(ctx.guild.fetch_members(limit=None))
-                await ctx.guild.kick(user=member)
-            except:
-                await ctx.send(f"Unable to kick {member}")
+#                 await ctx.guild.kick(user=member)
+#             except:
+#                 await ctx.send(f"Unable to kick {member}")
 
 def setup(bot):
     bot.add_cog(Danger(bot))
