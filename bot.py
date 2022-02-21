@@ -8,11 +8,26 @@ from nextcord.ext import commands, tasks
 from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 import logging
+from sys import argv
 #import keep_alive
 
+arg = argv[1]
+
+try:
+    os.system("git remote add origin https://github.com/AnonymousDebug/pengoon-bot.git")
+    os.system("git fetch")
+    if arg:
+        os.system(f"git pull origin {arg}")
+    else:
+        os.system("git pull")
+except:
+    print("Unable to auto-update, manual update needed")
+
+intents = nextcord.Intents.default()
+intents.members = True
 TOKEN = os.environ['TOKEN']
-bot = commands.Bot(command_prefix = '-')
- 
+bot = commands.Bot(command_prefix = '-', intents=intents)
+
 #Logging Setup
 logger = logging.getLogger('nextcord')
 logger.setLevel(logging.INFO)
