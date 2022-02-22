@@ -1,4 +1,4 @@
-One more multipourpose discord bot....\
+One more multi-pourpose discord bot....\
 This is a multi-pourpose discord bot which serves actual pourpose in your server.\
 You need to host this bot yourself, I host this bot on [replit](https://replit.com/).
 
@@ -19,7 +19,7 @@ Source for Environment varibles: **.env** file or from shell
 6. Run
 
 # Legal
-This bot is licenced under the GNU AGPL V3.\
+This bot is licenced under the GNU AGPL V3 unless otherwise noted.\
 Jotd provided by [jokes.one](https://jokes.one)\
 Avatar by [corneliusventures](https://unsplash.com/@corneliusventures) on [Unsplash](https://unsplash.com/photos/Ak81Vc-kCf4)
 
