@@ -10,15 +10,14 @@ import json
 import logging
 from sys import argv
 from dotenv import load_dotenv
-#import keep_alive
+import keep_alive
+
+#PRESTART 
 try:
     load_dotenv()
-
 except: 
     print("Running in replit or .env file not found.")
-
 arg = argv[1]
-
 try:
     os.system("git remote add origin https://github.com/AnonymousDebug/pengoon-bot.git")
     os.system("git fetch")
@@ -28,7 +27,9 @@ try:
         os.system("git pull")
 except:
     print("Unable to auto-update, manual update needed")
-
+    
+#PRESTART END
+    
 intents = nextcord.Intents.default()
 intents.members = True
 TOKEN = os.getenv('TOKEN')
@@ -58,6 +59,6 @@ for file in os.listdir("./cogs"):
         bot.load_extension(f"cogs.{name}")
         print(f"Loaded cog {name}")
         
-#keep_alive.keep_alive()
+keep_alive.keep_alive()
 bot.run(TOKEN) 
 
