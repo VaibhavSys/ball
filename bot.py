@@ -16,15 +16,15 @@ import keep_alive
 try:
     load_dotenv()
 except: 
-    print("Running in replit or .env file not found.")
-arg = argv[1]
+    print(".env file not found.")
+
 try:
-    os.system("git remote add origin https://github.com/AnonymousDebug/pengoon-bot.git")
-    os.system("git fetch")
+    arg = argv[1]
+    os.system("git remote add origin https://github.com/AnonymousDebug/pengoon-bot.git && git fetch && git pull")
     if arg:
-        os.system(f"git pull origin {arg}")
+        os.system(f"git fetch && git pull origin {arg}")
     else:
-        os.system("git pull")
+        os.system("git fetch && git pull")
 except:
     print("Unable to auto-update, manual update needed")
     
