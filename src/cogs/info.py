@@ -19,11 +19,7 @@ class Info(commands.Cog):
         Avatar: {member.display_avatar.url}
         Guild Avatar: {member.guild_avatar}
         Banner: {member.banner}
-        Name: {member.name}
-        Discriminator: {member.discriminator}
         Display Name: {member.display_name}
-        Nick: {member.nick}
-        Mention: {member.mention}
         ID: {member.id}
         Colour: {member.colour}
         Bot: {member.bot}
@@ -37,13 +33,9 @@ class Info(commands.Cog):
         In Voice: {member.voice}
         Status: {member.status}
         Raw Status: {member.raw_status}
-        Actvity: {member.activity}
-        Activities: {member.activities}
         Boosting Since: {member.premium_since}
         Timeout: {member.timeout}
         Top Role: {member.top_role}
-        Guild Roles: {member.roles}
-        Guild Permissions: {member.guild_permissions}
         """)
         await ctx.send(embed=embed)
                         
