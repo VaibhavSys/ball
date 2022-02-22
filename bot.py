@@ -20,7 +20,7 @@ except:
 
 try:
     arg = argv[1]
-    os.system("git remote add origin https://github.com/AnonymousDebug/pengoon-bot.git && git fetch && git pull")
+    os.system("git remote add origin https://github.com/MouseMoosz/pengoon-bot.git && git fetch && git pull")
     if arg:
         os.system(f"git fetch && git pull origin {arg}")
     else:

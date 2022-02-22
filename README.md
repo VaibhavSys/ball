@@ -18,6 +18,8 @@ Source for Environment varibles: **.env** file or from shell
 5. Install the dependencies and setup the secrets or your **.env** file.
 6. Run
 
+
+**NOTE: Replace the url of the github repository in bot.py with yours**
 # Legal
 This bot is licenced under the GNU AGPL V3 unless otherwise noted.\
 Jotd provided by [jokes.one](https://jokes.one)\
