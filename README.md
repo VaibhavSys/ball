@@ -1,5 +1,5 @@
 One more multipourpose discord bot....\
-This is a multi-pourpose discord bot which serves actual pourpose in your server, this bot is licenced under the GNU AGPL V3.\
+This is a multi-pourpose discord bot which serves actual pourpose in your server.\
 You need to host this bot yourself, I host this bot on [replit](https://replit.com/).
 
 # Bot Information
@@ -17,3 +17,10 @@ Source for Environment varibles: **.env** file or from shell
 4. Create a new repl (import from your fork on github)
 5. Install the dependencies and setup the secrets or your **.env** file.
 6. Run
+
+# Legal
+This bot is licenced under the GNU AGPL V3.\
+Jotd provided by [jokes.one](https://jokes.one)\
+Avatar by [corneliusventures](https://unsplash.com/@corneliusventures) on [Unsplash](https://unsplash.com/photos/Ak81Vc-kCf4)
+
+  
