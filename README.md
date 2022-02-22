@@ -1,4 +1,4 @@
-One more multipourpose discord bot....\
+One more multi-pourpose discord bot....\
 This is a multi-pourpose discord bot which serves actual pourpose in your server.\
 You need to host this bot yourself, I host this bot on [replit](https://replit.com/).
 
