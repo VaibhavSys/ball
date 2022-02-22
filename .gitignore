@@ -7,3 +7,4 @@ bin
 lib64
 *.bak
 .env
+foo
