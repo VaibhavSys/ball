@@ -47,5 +47,10 @@ class Info(commands.Cog):
         """)
         await ctx.send(embed=embed)
                         
+
+    @commands.command()
+    async def sayhi(self, ctx):
+        await ctx.send(f"Hello {ctx.author.mention}! My prefix is '-'.")
+
 def setup(bot):
     bot.add_cog(Info(bot))

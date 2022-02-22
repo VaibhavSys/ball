@@ -3,6 +3,7 @@ import nextcord.utils
 from nextcord.ext import commands, tasks
 import requests
 import json
+import os
 
 class Fun(commands.Cog):
 	def __init__(self, bot):
@@ -26,6 +27,23 @@ class Fun(commands.Cog):
 		Joke provided by https://jokes.one/
 		""")
 		await ctx.send(embed=embed)
+
+	@commands.command()
+	async def randfname(self, ctx, quantity = 1):
+		headers = {
+			'accept': '*/*',
+			'X-Api-Key': os.getenv("RANDOMMER_API"),
+	}
+
+		params = (
+			('nameType', 'fullname'),
+			('quantity', quantity),
+		)
+
+		response = requests.get('https://randommer.io/api/Name', headers=headers, params=params)
+		respjson = json.loads(response.text)
+		respsend = respjson[0]
+		await ctx.send(respsend)
    
 def setup(bot):
     bot.add_cog(Fun(bot))

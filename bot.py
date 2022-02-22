@@ -9,7 +9,13 @@ from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 import logging
 from sys import argv
+from dotenv import load_dotenv
 #import keep_alive
+try:
+    load_dotenv()
+
+except: 
+    print("Running in replit or .env file not found.")
 
 arg = argv[1]
 
@@ -25,7 +31,7 @@ except:
 
 intents = nextcord.Intents.default()
 intents.members = True
-TOKEN = os.environ['TOKEN']
+TOKEN = os.getenv('TOKEN')
 bot = commands.Bot(command_prefix = '-', intents=intents)
 
 #Logging Setup
@@ -39,10 +45,6 @@ logger.addHandler(handler)
 async def on_ready():
     print(f"----------\nLogged in as {bot.user.name}({bot.user.id})\n----------") 
 
-
-@bot.command()
-async def sayhi(ctx):
-  await ctx.send("Hello {ctx.author.mention}! My prefix is '-'.")
 
 @bot.command()
 @commands.is_owner()
