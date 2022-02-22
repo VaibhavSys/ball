@@ -9,10 +9,15 @@ from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 import logging
 from sys import argv
-#import keep_alive
+from dotenv import load_dotenv
+import keep_alive
 
+#PRESTART 
+try:
+    load_dotenv()
+except: 
+    print("Running in replit or .env file not found.")
 arg = argv[1]
-
 try:
     os.system("git remote add origin https://github.com/AnonymousDebug/pengoon-bot.git")
     os.system("git fetch")
@@ -22,10 +27,12 @@ try:
         os.system("git pull")
 except:
     print("Unable to auto-update, manual update needed")
-
+    
+#PRESTART END
+    
 intents = nextcord.Intents.default()
 intents.members = True
-TOKEN = os.environ['TOKEN']
+TOKEN = os.getenv('TOKEN')
 bot = commands.Bot(command_prefix = '-', intents=intents)
 
 #Logging Setup
@@ -41,10 +48,6 @@ async def on_ready():
 
 
 @bot.command()
-async def sayhi(ctx):
-  await ctx.send("Hello {ctx.author.mention}! My prefix is '-'.")
-
-@bot.command()
 @commands.is_owner()
 async def shutdown(ctx):
     print("Shutting down bot...")
@@ -56,6 +59,6 @@ for file in os.listdir("./cogs"):
         bot.load_extension(f"cogs.{name}")
         print(f"Loaded cog {name}")
         
-#keep_alive.keep_alive()
+keep_alive.keep_alive()
 bot.run(TOKEN) 
 
