@@ -47,12 +47,6 @@ async def on_ready():
     print(f"----------\nLogged in as {bot.user.name}({bot.user.id})\n----------") 
 
 
-@bot.command()
-@commands.is_owner()
-async def shutdown(ctx):
-    print("Shutting down bot...")
-    await bot.close()
-
 for file in os.listdir("./cogs"): 
     if file.endswith(".py"): 
         name = file[:-3] 
