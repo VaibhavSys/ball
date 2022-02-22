@@ -6,11 +6,11 @@ class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(breif="Latency of bot", description="Latency of bot")
     async def ping(self, ctx):
         await ctx.send(f'Pong! {round (self.bot.latency * 1000)} ms')
         
-    @commands.command()
+    @commands.command(breif="Information about a user", description="Information about a user")
     async def userinfo(self, ctx, member: nextcord.Member):
         embed = nextcord.Embed(title = f"UserInfo of {member}")
         embed.set_author(name = "Pengoon", url=nextcord.Embed.Empty, icon_url=self.bot.user.display_avatar)
@@ -48,7 +48,7 @@ class Info(commands.Cog):
         await ctx.send(embed=embed)
                         
 
-    @commands.command()
+    @commands.command(breif="Say hello and tell the prefix", description="Say hello and tell the prefix")
     async def sayhi(self, ctx):
         await ctx.send(f"Hello {ctx.author.mention}! My prefix is '-'.")
 

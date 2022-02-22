@@ -9,8 +9,8 @@ class Fun(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		
-	@commands.command()   
-	async def joke(self, ctx):
+	@commands.command(brief="Joke Of The Day", description="Joke Of The Day")
+	async def jotd(self, ctx):
 		url = 'https://api.jokes.one/jod?category=knock-knock'
 		api_token = None
 		headers = {'content-type': 'application/json',
@@ -28,7 +28,7 @@ class Fun(commands.Cog):
 		""")
 		await ctx.send(embed=embed)
 
-	@commands.command()
+	@commands.command(brief="Generate random fullname", description="Generate random fullname")
 	async def randfname(self, ctx, quantity = 1):
 		headers = {
 			'accept': '*/*',
