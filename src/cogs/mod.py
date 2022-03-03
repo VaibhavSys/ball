@@ -10,7 +10,8 @@ class Mod(commands.Cog):
 		self.bot = bot
 
 	@commands.command(brief="Add role to a user", description="Add role to a user")
-	@commands.has_permissions(manage_roles=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_roles=True))
+	@commands.guild_only()
 	async def addrole(self, ctx, member: nextcord.Member, roles: nextcord.Role):
 		await member.add_roles(roles)
 		await ctx.send(f"{member.mention} has been given role(s) {roles.name}({roles.id}) by {ctx.author.mention}")
@@ -29,7 +30,8 @@ class Mod(commands.Cog):
 			await ctx.send("Adding role Failed")
 	
 	@commands.command(brief="Remove role from a user", description="Remove role from a user")
-	@commands.has_permissions(manage_roles=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_roles=True))
+	@commands.guild_only()
 	async def rmrole(self, ctx, member: nextcord.Member, roles: nextcord.Role):
 		await member.remove_roles(roles)
 		await ctx.send(f"{member.mention} has been removed from {roles.name}({roles.id}) role(s) by {ctx.author.mention}")
@@ -48,7 +50,8 @@ class Mod(commands.Cog):
 			await ctx.send("Removing role Failed")
 			
 	@commands.command(brief="Mute a user", description="Mute a user")
-	@commands.has_permissions(manage_messages=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
+	@commands.guild_only()
 	async def mute(self, ctx, member : nextcord.Member,*,  reason=None):
 		guild = ctx.author.guild
 		role = nextcord.utils.get(guild.roles, name="Muted")  
@@ -63,8 +66,6 @@ class Mod(commands.Cog):
 				except nextcord.Forbidden:
 					return await ctx.send("I have no permissions to make a muted role (Manage Roles)")
 		
-		
-		
 		if not role:
 			 await makemuted()
 			 		
@@ -74,7 +75,7 @@ class Mod(commands.Cog):
 	@mute.error
 	async def mute_error(self, ctx, error):
 		if isinstance(error, commands.errors.MissingRequiredArgument):
-			await ctx.send("Please use the command like '{dprefix}mute <user> (reason)'")
+			await ctx.send(f"Please use the command like '{dprefix}mute <user> (reason)'")
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
 		# elif isinstance(error, commands.errors.CommandInvokeError):
@@ -83,7 +84,8 @@ class Mod(commands.Cog):
 			await ctx.send(f"Mute failed: {error}")
 			
 	@commands.command(brief="Unmute a user", description="Unmute a user")
-	@commands.has_permissions(manage_messages=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
+	@commands.guild_only()
 	async def unmute(self, ctx, user: nextcord.Member, *, reason=None):
 		await user.remove_roles(nextcord.utils.get(ctx.guild.roles, name="Muted"))
 		await ctx.send(f"{user.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
@@ -96,7 +98,8 @@ class Mod(commands.Cog):
 			await ctx.send(f"Unmute failed: {error}")
 		
 	@commands.command(brief="Mute a user in voice channel", description="Mute a user in voice channel")
-	@commands.has_guild_permissions(mute_members=True)
+	@commands.check_any(commands.is_owner() or commands.has_guild_permissions(mute_members=True))
+	@commands.guild_only()
 	async def vcmute(self, ctx, member : nextcord.Member, *, reason=None):
 		await member.edit(mute = True)
 		await ctx.send(f"{member} has been successfully voice-muted by {ctx.author.mention} with reason '{reason}'")
@@ -113,7 +116,8 @@ class Mod(commands.Cog):
 			await ctx.send(f"Voice-mute failed: {error}")
 		
 	@commands.command(brief="Unmute a user in voice channel", description="Unmute a user in voice channel")
-	@commands.has_guild_permissions(mute_members=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(mute_members=True))
+	@commands.guild_only()
 	async def vcunmute(self, ctx, member : nextcord.Member, *, reason=None):
 		await member.edit(mute = False)
 		await ctx.send(f"{member} has been successfully voice-unmuted by {ctx.author.mention} with reason '{reason}'")	
@@ -130,7 +134,8 @@ class Mod(commands.Cog):
 			await ctx.send(f"Voice unmute failed: {error}")
 	
 	@commands.command(brief="Kick a user from guild", description="Kick a user from guild")
-	@commands.has_permissions(kick_members=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(kick_members=True))
+	@commands.guild_only()
 	async def kick(self, ctx, member: nextcord.Member, *, reason=None):
 		await ctx.guild.kick(user=member, reason=reason)
 		await ctx.send(f"User {member}({member.id})) has kicked by {ctx.author.mention} with reason '{reason}''.")
@@ -149,7 +154,8 @@ class Mod(commands.Cog):
 			await ctx.send("Kick Failed")
 			
 	@commands.command(brief="Ban a user from guild", description="Ban a user from guild")
-	@commands.has_permissions(ban_members=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(ban_members=True))
+	@commands.guild_only()
 	async def ban(self, ctx, member : nextcord.Member, *, reason=None):
 		await member.ban(reason=reason)
 		await ctx.send(f"{member} has been banned by {ctx.author.mention} with reason '{reason}'.")
@@ -168,7 +174,8 @@ class Mod(commands.Cog):
 			await ctx.send("Ban Failed")
 			
 	@commands.command(brief="Unban a user from guild", description="Unban a user from guild")
-	@commands.has_permissions(ban_members=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(ban_members=True))
+	@commands.guild_only()
 	async def unban(self, ctx, *, member, reason=None):
 		banned_users = await ctx.guild.bans()
 		member_name, member_discriminator = member.split("#")
@@ -194,7 +201,8 @@ class Mod(commands.Cog):
 			await ctx.send("Unban Failed")
 			
 	@commands.command(brief="Lock a channel", description="Lock a channel. Noone without special permission can chat in a locked channel")
-	@commands.has_permissions(manage_messages=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
+	@commands.guild_only()
 	async def lock(self, ctx, channel : nextcord.TextChannel = None):
 		channel = channel or ctx.channel
 		try:
@@ -211,7 +219,8 @@ class Mod(commands.Cog):
 			await ctx.send("You are missing Manage Messages permission(s) to run this command.")
 	
 	@commands.command(brief="Unlock a channel", description="Unlock a channel")
-	@commands.has_permissions(manage_messages=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
+	@commands.guild_only()
 	async def unlock(self, ctx, channel : nextcord.TextChannel = None):
 		channel = channel or ctx.channel
 		try:
@@ -229,7 +238,8 @@ class Mod(commands.Cog):
 			
 	
 	@commands.command(brief="Delete messages in a channel", description="Delete a certian amount of messages in a channel")
-	@commands.has_permissions(manage_messages=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
+	@commands.guild_only()
 	async def purge(self, ctx, *, limit : int):
 		try:
 			await ctx.channel.purge(limit=limit)
@@ -244,7 +254,7 @@ class Mod(commands.Cog):
 	
 	@commands.command(brief="Change a channel's slowmode setting", description="Use the command without any args to disable slowmode")
 	@commands.guild_only()
-	@commands.bot_has_permissions(manage_channels=True)
+	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
 	async def slowmode(self, ctx, interval: int = 0, unit = "s"):
 		"""Changes channel's slowmode setting.
 		Interval can be anything from 0 seconds to 6 hours.
