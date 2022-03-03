@@ -1,7 +1,7 @@
 import nextcord
 import nextcord.ext
 import nextcord.utils
-from nextcord.ext import commands, tasks
+from nextcord.ext import commands
 
 class Confirm(nextcord.ui.View):
     def __init__(self):
@@ -32,7 +32,8 @@ class Danger(commands.Cog):
     tmsg = "Timed out!"
     
     @commands.command(brief = "Deletes all channels in guild")
-    @commands.has_permissions(administrator=True)
+    @commands.check_any(commands.is_owner() or commands.has_permissions(administrator=True))
+    @commands.guild_only()
     async def nuke(self, ctx):
         view = Confirm()
         await ctx.send(Danger.rnote)
@@ -53,7 +54,8 @@ class Danger(commands.Cog):
             await ctx.send("Cancelled.")
 
     @commands.command(brief = "Deletes all roles in guild", description = "Deletes all roles in guild")
-    @commands.has_permissions(administrator=True)
+    @commands.check_any(commands.is_owner() or commands.has_permissions(administrator=True))
+    @commands.guild_only()
     async def nuke_roles(self, ctx):
         view = Confirm()
         await ctx.send("NOTE: The bot's role should be on top to cause maximum damage!")
@@ -74,7 +76,8 @@ class Danger(commands.Cog):
             await ctx.send("Cancelled.")
 
     @commands.command(brief = "Deletes all emojis in guild")
-    @commands.has_permissions(administrator=True)
+    @commands.check_any(commands.is_owner() or commands.has_permissions(administrator=True))
+    @commands.guild_only()
     async def nuke_emojis(self, ctx):
         view = Confirm()
         await ctx.send(Danger.rnote)
