@@ -9,15 +9,7 @@ from nextcord.ext.commands import has_permissions,  CheckFailure, check
 import json
 import logging
 from sys import argv
-from dotenv import load_dotenv
 import keep_alive
-
-#PRESTART
-try:
-    load_dotenv()
-except:
-    print(".env file not found.")
-#PRESTART END
 
 intents = nextcord.Intents.default()
 intents.members = True

@@ -52,26 +52,24 @@ class Mod(commands.Cog):
 	@commands.command(brief="Mute a user", description="Mute a user")
 	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
 	@commands.guild_only()
-	async def mute(self, ctx, member : nextcord.Member,*,  reason=None):
-		guild = ctx.author.guild
-		role = nextcord.utils.get(guild.roles, name="Muted")  
-				
-		async def makemuted():						
-			if not role:
-				try:  
-					muted = await guild.create_role(name="Muted", reason="To use for muting")
+	async def mute(self, ctx, member: nextcord.Member, *, reason=None):
+		mutedRole = nextcord.utils.get(ctx.guild.roles, name="Muted")
+		async def makeMuted():
+			if not mutedRole:
+				try:
+					muted = await ctx.guild.create_role(name="Muted", reason="Used for muting.")
 					for channel in ctx.guild.channels:
 						await channel.set_permissions(muted, send_messages=False)
-					
+
 				except nextcord.Forbidden:
-					return await ctx.send("I have no permissions to make a muted role (Manage Roles)")
-		
-		if not role:
-			 await makemuted()
-			 		
-		await member.add_roles("Muted")
+					return await ctx.send("I don\'t have permissions to make muted role.")
+
+		if not mutedRole:
+			await makeMuted()
+
+		await member.add_roles(mutedRole)
 		await ctx.send(f"{member} has been muted by {ctx.author.mention} with reason '{reason}'")
-	
+
 	@mute.error
 	async def mute_error(self, ctx, error):
 		if isinstance(error, commands.errors.MissingRequiredArgument):

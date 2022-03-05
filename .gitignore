@@ -2,9 +2,8 @@ __pycache__/
 nextcord.log
 poetry.lock
 .git
-lib
-bin
-lib64
 *.bak
-.env
 foo
+venv
+.*
+pyvenv.cfg
