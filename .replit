@@ -1,2 +1,2 @@
 language = "python3"
-run = "cd src/ && python3 bot.py production"
+run = "cd src/ && python3 bot.py"
