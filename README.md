@@ -8,9 +8,8 @@ Types of commands: Moderation, Fun, Destructive, Info etc.\
 Library Used: [NextCord](https://github.com/nextcord/nextcord)\
 TOKEN Source: Environment variable named "**TOKEN**"\
 API Key for randommer.io: Environment variable named "**RANDOMMER_API**"\
-Source for Environment varibles: **.env** file or from shell
 
-# Hosting 
+# Hosting (Can host on other places too)
 1. Create a [bot account](https://nextcord.readthedocs.io/en/stable/discord.html)
 2. Regiser a account on [replit](https://replit.com/signup)
 3. Fork this repository
