@@ -24,9 +24,20 @@ handler = logging.FileHandler(filename='nextcord.log', encoding='utf-8', mode='w
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
+# Events
+
+@bot.event
+async def on_connect():
+    print("----------\nConnected successfully.\n----------")
+
 @bot.event
 async def on_ready():
-    print(f"----------\nLogged in as {bot.user}({bot.user.id})\n----------")
+    print(f"----------\nLogged in as {bot.user}({bot.user.id}).\n----------")
+
+@bot.event
+async def on_disconnect():
+    print("Disconnected.")
+
 for file in os.listdir("./cogs"): 
     if file.endswith(".py"): 
         name = file[:-3] 
