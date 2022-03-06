@@ -18,8 +18,7 @@ class Fun(commands.Cog):
 		
 		response = requests.get(url, headers=headers)
 		jokes=response.json()['contents']['jokes'][0]
-		embed = nextcord.Embed(title = jokes['joke']['title'], colour=0x2ecc71)
-		embed.set_author(name = "Pengoon")
+		embed = nextcord.Embed(title = jokes['joke']['title'], colour=nextcord.Colour.green())
 		embed.set_footer(text = f"Requested by {ctx.author}", icon_url=ctx.author.display_avatar)
 		embed.description = (f"""
 		{jokes['joke']['text']}

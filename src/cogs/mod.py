@@ -73,11 +73,9 @@ class Mod(commands.Cog):
 	@mute.error
 	async def mute_error(self, ctx, error):
 		if isinstance(error, commands.errors.MissingRequiredArgument):
-			await ctx.send(f"Please use the command like '{dprefix}mute <user> (reason)'")
+			await ctx.send("Missing Argument: member")
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-		# elif isinstance(error, commands.errors.CommandInvokeError):
-			# await ctx.send("I do not have the required permissions to do that, or the member you are trying to mute has a role higher than me.")
 		else:
 			await ctx.send(f"Mute failed: {error}")
 			
@@ -89,9 +87,11 @@ class Mod(commands.Cog):
 		await ctx.send(f"{user.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 	
 	@unmute.error
-	async def unmute_error(self, ext, error):
-		if isinstance(errpr, commands.errors.MemberNotFound):
-			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+	async def unmute_error(self, ctx, error):
+		if isinstance(error, commands.errors.MemberNotFound):
+			await ctx.send(f"I coudn't find that member.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send("Missing Argument: member")
 		else:
 			await ctx.send(f"Unmute failed: {error}")
 		
@@ -108,8 +108,8 @@ class Mod(commands.Cog):
 			await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Mute Members) to use this command.")
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-		elif isinstance(error, commands.errors.CommandInvokeError):
-			await ctx.send("I do not have the required permissions to do that, or the member you are trying to voice-mute has a role higher than me.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send("Missing Argument: member")
 		else:
 			await ctx.send(f"Voice-mute failed: {error}")
 		
@@ -126,8 +126,8 @@ class Mod(commands.Cog):
 			await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Mute Members) to use this command.")
 		elif isinstance(error, commands.errors.MemberNotFound):
 			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-		elif isinstance(error, commands.errors.CommandInvokeError):
-			await ctx.send("I do not have the required permissions to do that, or the member you are trying to voice-unmute has a role higher than me.")
+		elif isinstance(error, commands.errors.MissingRequiredArgument):
+			await ctx.send("Missing Argument: member")
 		else:
 			await ctx.send(f"Voice unmute failed: {error}")
 	
@@ -143,11 +143,9 @@ class Mod(commands.Cog):
 		if isinstance(error, commands.errors.MissingPermissions):
 			await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Kick Members) to use this command.")
 		elif isinstance(error, commands.errors.MemberNotFound):
-			await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-		elif isinstance(error, commands.errors.CommandInvokeError):
-			await ctx.send("I do not have the required permissions to do that, or the member you are trying to kick has a role higher than me.")
+			await ctx.send("I coudn't find that member.")
 		elif isinstance(error, commands.errors.MissingRequiredArgument):
-			await ctx.send(f"Missing arguments: Please use the command like '{dfprefix}kick <member> (reason)'")
+			await ctx.send("Missing Required Argument: Member")
 		else:
 			await ctx.send("Kick Failed")
 			
@@ -238,7 +236,7 @@ class Mod(commands.Cog):
 	@commands.command(brief="Delete messages in a channel", description="Delete a certian amount of messages in a channel")
 	@commands.check_any(commands.is_owner() or commands.has_permissions(manage_messages=True))
 	@commands.guild_only()
-	async def purge(self, ctx, *, limit : int):
+	async def purge(self, ctx, *, limit: int):
 		try:
 			await ctx.channel.purge(limit=limit)
 			await ctx.send(f"Purged {limit} messages.", delete_after=3)
