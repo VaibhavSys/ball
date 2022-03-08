@@ -2,6 +2,7 @@ import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
 
+
 class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -10,14 +11,20 @@ class Info(commands.Cog):
     async def ping(self, ctx):
         await ctx.send(f'Pong! {round (self.bot.latency * 1000)} ms')
 
-    @commands.command(brief="Say hello and tell the prefix", description="Say hello and tell the prefix")
+    @commands.command(brief="Say hello and tell the prefix",
+                      description="Say hello and tell the prefix")
     async def sayhi(self, ctx):
         await ctx.send(f"Hello {ctx.author.mention}! My prefix is '-'.")
 
-    @commands.command(brief="Information about a user", description="Information about a user")
+    @commands.command(brief="Information about a user",
+                      description="Information about a user")
     async def userinfo(self, ctx, member: nextcord.Member):
-        embed = nextcord.Embed(title = f"UserInfo of {member}", colour=nextcord.Colour.green())
-        embed.set_footer(text = f"Requested by {ctx.author}", icon_url = ctx.author.display_avatar)
+        embed = nextcord.Embed(
+            title=f"UserInfo of {member}",
+            colour=nextcord.Colour.green())
+        embed.set_footer(
+            text=f"Requested by {ctx.author}",
+            icon_url=ctx.author.display_avatar)
         embed.description = (f"""
         Avatar: {member.display_avatar.url}
         Banner: {member.banner}
@@ -40,7 +47,8 @@ class Info(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("Missing argument: member")
 
-    @commands.command(brief="Information about the current guild", description="Information about the current guild")
+    @commands.command(brief="Information about the current guild",
+                      description="Information about the current guild")
     async def guildinfo(self, ctx):
         humans = 0
         bots = 0
@@ -51,8 +59,12 @@ class Info(commands.Cog):
         for bot in ctx.guild.bots:
             bots += 1
 
-        embed = nextcord.Embed(title = f"Guild info of {ctx.guild.name}", colour=nextcord.Colour.green())
-        embed.set_footer(text = f"Requested by {ctx.author}", icon_url = ctx.author.display_avatar)
+        embed = nextcord.Embed(
+            title=f"Guild info of {ctx.guild.name}",
+            colour=nextcord.Colour.green())
+        embed.set_footer(
+            text=f"Requested by {ctx.author}",
+            icon_url=ctx.author.display_avatar)
         embed.description = (f"""
                                  Icon: {ctx.guild.icon}
                                  Banner: {ctx.guild.banner}
@@ -66,10 +78,15 @@ class Info(commands.Cog):
                                  """)
         await ctx.send(embed=embed)
 
-    @commands.command(brief="Information about a emoji", description="Information about a emoji")
+    @commands.command(brief="Information about a emoji",
+                      description="Information about a emoji")
     async def emojiinfo(self, ctx, emoji: nextcord.Emoji):
-        embed = nextcord.Embed(title = f"Info of {emoji}", colour=nextcord.Colour.green())
-        embed.set_footer(text = f"Requested by {ctx.author}", icon_url = ctx.author.display_avatar)
+        embed = nextcord.Embed(
+            title=f"Info of {emoji}",
+            colour=nextcord.Colour.green())
+        embed.set_footer(
+            text=f"Requested by {ctx.author}",
+            icon_url=ctx.author.display_avatar)
         embed.description = (f"""
                           Name: {emoji.name}
                           Uploaded by: {emoji.user}
@@ -84,11 +101,16 @@ class Info(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("Missing argument: emoji")
 
-    @commands.command(brief="Information about a invite", description="Information about a invite")
+    @commands.command(brief="Information about a invite",
+                      description="Information about a invite")
     async def inviteinfo(self, ctx, invite: nextcord.Invite):
-        embed = nextcord.Embed(title = f"Info of {invite}", colour=nextcord.Colour.green())
+        embed = nextcord.Embed(
+            title=f"Info of {invite}",
+            colour=nextcord.Colour.green())
         #embed.set_author(name = ctx.bot.user, icon_url = ctx.bot.user.display_avatar)
-        embed.set_footer(text = f"Requested by {ctx.author}", icon_url = ctx.author.display_avatar)
+        embed.set_footer(
+            text=f"Requested by {ctx.author}",
+            icon_url=ctx.author.display_avatar)
         embed.description = (f"""
                              Code: {invite.code}
                              ID: {invite.id}
@@ -105,6 +127,7 @@ class Info(commands.Cog):
     async def inviteinfo_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("Missing argument: invite")
+
 
 def setup(bot):
     bot.add_cog(Info(bot))

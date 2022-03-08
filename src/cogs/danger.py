@@ -3,6 +3,7 @@ import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
 
+
 class Confirm(nextcord.ui.View):
     def __init__(self):
         super().__init__()
@@ -10,19 +11,22 @@ class Confirm(nextcord.ui.View):
 
     # When the confirm button is pressed, set the inner value to `True` and
     # stop the View from listening to more input.
-    # We also send the user an ephemeral message that we're confirming their choice.
+    # We also send the user an ephemeral message that we're confirming their
+    # choice.
     @nextcord.ui.button(label='Confirm', style=nextcord.ButtonStyle.red)
     async def confirm(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
         await interaction.response.send_message('Confirming...', ephemeral=True)
         self.value = True
         self.stop()
 
-    # This one is similar to the confirmation button except sets the inner value to `False`
+    # This one is similar to the confirmation button except sets the inner
+    # value to `False`
     @nextcord.ui.button(label='Cancel', style=nextcord.ButtonStyle.green)
     async def cancel(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
         await interaction.response.send_message('Cancelling...', ephemeral=True)
         self.value = False
         self.stop()
+
 
 class Danger(commands.Cog):
     def __init__(self, bot):
@@ -30,9 +34,10 @@ class Danger(commands.Cog):
 
     rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"
     tmsg = "Timed out!"
-    
-    @commands.command(brief = "Deletes all channels in guild")
-    @commands.check_any(commands.is_owner() or commands.has_permissions(administrator=True))
+
+    @commands.command(brief="Deletes all channels in guild")
+    @commands.check_any(commands.is_owner()
+                        or commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke(self, ctx):
         view = Confirm()
@@ -48,13 +53,15 @@ class Danger(commands.Cog):
                 try:
                     await channel.delete()
 
-                except:
+                except BaseException:
                     await ctx.send(f"Unable to delete {channel.name}!")
         else:
             await ctx.send("Cancelled.")
 
-    @commands.command(brief = "Deletes all roles in guild", description = "Deletes all roles in guild")
-    @commands.check_any(commands.is_owner() or commands.has_permissions(administrator=True))
+    @commands.command(brief="Deletes all roles in guild",
+                      description="Deletes all roles in guild")
+    @commands.check_any(commands.is_owner()
+                        or commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke_roles(self, ctx):
         view = Confirm()
@@ -70,13 +77,14 @@ class Danger(commands.Cog):
                 try:
                     await role.delete()
 
-                except:
+                except BaseException:
                     await ctx.send(f"Unable to delete {role.name}!")
         else:
             await ctx.send("Cancelled.")
 
-    @commands.command(brief = "Deletes all emojis in guild")
-    @commands.check_any(commands.is_owner() or commands.has_permissions(administrator=True))
+    @commands.command(brief="Deletes all emojis in guild")
+    @commands.check_any(commands.is_owner()
+                        or commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke_emojis(self, ctx):
         view = Confirm()
@@ -90,9 +98,9 @@ class Danger(commands.Cog):
             await ctx.send("Nuking emojis...")
             for emoji in ctx.guild.emojis:
                 try:
-                    await ctx.guild.delete_emoji(emoji, reason = f"NukeEmojis command issued by {ctx.author.name}")
+                    await ctx.guild.delete_emoji(emoji, reason=f"NukeEmojis command issued by {ctx.author.name}")
 
-                except:
+                except BaseException:
                     await ctx.send(f"Unable to delete {emoji}!")
         else:
             await ctx.send("Cancelled.")
@@ -103,10 +111,11 @@ class Danger(commands.Cog):
 #         for member.member in ctx.guild.fetch_members(limit=None):
 #             try:
 #             await ctx.send(ctx.guild.members)
-                #await ctx.send(ctx.guild.fetch_members(limit=None))
+            # await ctx.send(ctx.guild.fetch_members(limit=None))
 #                 await ctx.guild.kick(user=member)
 #             except:
 #                 await ctx.send(f"Unable to kick {member}")
+
 
 def setup(bot):
     bot.add_cog(Danger(bot))
