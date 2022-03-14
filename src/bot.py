@@ -3,7 +3,7 @@ import os
 import nextcord.ext
 from nextcord.ext import commands
 import logging
-import keep_alive
+#import keep_alive
 from os import getenv
 
 intents = nextcord.Intents.default()
@@ -17,11 +17,11 @@ logger = logging.getLogger('nextcord')
 logger.setLevel(logging.INFO)
 handler = logging.FileHandler(
     filename='nextcord.log', encoding='utf-8', mode='w'
-    )
+)
 
 handler.setFormatter(
     logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s')
-    )
+)
 logger.addHandler(handler)
 
 
@@ -49,5 +49,5 @@ for file in os.listdir("./cogs"):
         print(f"Loaded cog {name}.")
 
 
-keep_alive.keep_alive()
+#keep_alive.keep_alive()
 bot.run(getenv("TOKEN"))

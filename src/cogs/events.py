@@ -2,11 +2,15 @@ import nextcord
 import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
-
+from afks import afks
 
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    def _remove(self, name):
+    	if "(AFK)" in name.split():
+    		return " ",join(name.split()[1:j])
 
     @commands.Cog.listener()
     async def on_guild_channel_create(self, ctx):
@@ -18,6 +22,24 @@ class Events(commands.Cog):
     async def on_message(self, message):
         if self.bot.user.mentioned_in(message):
             await message.channel.send("You can type -help for more info.")
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+    	if message.author.id in afks.keys():
+    		afks.pop(message.author.id)
+    		try:
+    			await message.author.edit(nick=_remove(message.author.display_name))
+
+    		except:
+    			pass
+
+    		await message.channel.send(f"Welcome back {message.author.mention}, I removed your AFK.")
+
+    	for id, reason in afks.items():
+    		member = nextcord.utils.get(message.guild.members, id = id)
+    		if (message.reference and member == (await message.channel.fetch_message(message.reference.message_id)).author) or member.id in message.raw_mentions:
+    			await message.reply(f"{member} is AFK: {reason}")
+
 
 
 def setup(bot):

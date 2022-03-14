@@ -2,6 +2,7 @@ import nextcord
 import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
+from nextcord import Interaction, SlashOption
 
 
 class Confirm(nextcord.ui.View):
@@ -27,26 +28,25 @@ class Confirm(nextcord.ui.View):
         self.value = False
         self.stop()
 
-
 class Danger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"
+        self.tmsg = "Timed out!"
 
-    rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"
-    tmsg = "Timed out!"
-
-    @commands.command(brief="Deletes all channels in guild")
-    @commands.check_any(commands.is_owner()
-                        or commands.has_permissions(administrator=True))
+    @commands.command(brief="Deletes all channels in guild"
+        , description="Deletes all channels in guild")
+    @commands.check_any(commands.is_owner(),
+        commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke(self, ctx):
         view = Confirm()
-        await ctx.send(Danger.rnote)
+        await ctx.send(self.rnote)
         await ctx.send("Are you sure that you want delete all channels in this server?", view=view)
         await view.wait()
 
         if view.value is None:
-            await ctx.send(Danger.tmsg)
+            await ctx.send(self.tmsg)
         elif view.value:
             await ctx.send("Nuking server...")
             for channel in ctx.guild.channels:
@@ -60,17 +60,17 @@ class Danger(commands.Cog):
 
     @commands.command(brief="Deletes all roles in guild",
                       description="Deletes all roles in guild")
-    @commands.check_any(commands.is_owner()
-                        or commands.has_permissions(administrator=True))
+    @commands.check_any(commands.is_owner(),
+        commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke_roles(self, ctx):
         view = Confirm()
-        await ctx.send("NOTE: The bot's role should be on top to cause maximum damage!")
+        await ctx.send(self.rnote)
         await ctx.send("Are you sure that you want to delete all roles in this guild?", view=view)
         await view.wait()
 
         if view.value is None:
-            await ctx.send(Danger.tmsg)
+            await ctx.send(self.tmsg)
         elif view.value:
             await ctx.send("Nuking roles...")
             for role in ctx.guild.roles:
@@ -83,17 +83,17 @@ class Danger(commands.Cog):
             await ctx.send("Cancelled.")
 
     @commands.command(brief="Deletes all emojis in guild")
-    @commands.check_any(commands.is_owner()
-                        or commands.has_permissions(administrator=True))
+    @commands.check_any(commands.is_owner(),
+        commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke_emojis(self, ctx):
         view = Confirm()
-        await ctx.send(Danger.rnote)
+        await ctx.send(self.rnote)
         await ctx.send("Are you sure that you want to delete all emojis in this guild?", view=view)
         await view.wait()
 
         if view.value is None:
-            await ctx.send(Danger.tmsg)
+            await ctx.send(self.tmsg)
         elif view.value:
             await ctx.send("Nuking emojis...")
             for emoji in ctx.guild.emojis:

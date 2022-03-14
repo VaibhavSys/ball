@@ -1,7 +1,7 @@
 import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
-
+from afks import afks
 
 class Info(commands.Cog):
     def __init__(self, bot):
@@ -127,6 +127,23 @@ class Info(commands.Cog):
     async def inviteinfo_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("Missing argument: invite")
+
+    @commands.command()
+    async def afk(self, ctx, *, reason = "Not provided"):
+        member = ctx.author
+        if member.id in afks.keys():
+            afks.pop(member.id)
+        else:
+            try:
+                await member.edit(nick = f"(AFK) {member.display_name}")
+
+            except:
+                pass
+        afks[member.id] = reason
+        embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
+        embed.set_thumbnail(url = member.display_avatar)
+        embed.add_field(name="AFK Note: ", value=reason)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
