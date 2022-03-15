@@ -3,6 +3,7 @@ import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
 from datetime import timedelta
+import datetime
 
 dfprefix = "-"
 
@@ -62,26 +63,31 @@ class Mod(commands.Cog):
     async def mute(self, ctx, member: nextcord.Member, time="10m", *, reason=None):
         unit = time[-1]
         time = int(time[:-1])
-        if unit == "s":
-            delta = timedelta(seconds=time).total_seconds()
-        elif unit == "m":
-            delta = timedelta(minutes=time).total_seconds()
-        elif unit == "h":
-            delta = timedelta(hours=time).total_seconds()
+        if unit == "s" and time < 604800:
+            delta = timedelta(seconds=time)
+        elif unit == "m" and time < 10080:
+            delta = timedelta(minutes=time)
+        elif unit == "h" and time < 168:
+            delta = timedelta(hours=time)
+        elif unit == "d" and time < 7:
+            delta = timedelta(days=time)
+        elif unit == "w" and time < 1:
+            delta = timedelta(weeks=time)
         else:
-            return await ctx.send("Invalid Time.")
+            return await ctx.send("Invalid time/unit or time is more than 1 week.")
 
-        await member.edit(timeout=delta, reason=reason)
+        await ctx.send(f"Time: {time}, Unit: {unit}, Delta: {delta}")
+        await ctx.reply(f"{member.mention} has been timed out by {ctx.author.mention} with reason '{reason}' for {f'{time}{unit}'}.")
 
 
-    @mute.error
-    async def mute_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("Missing Argument: member")
-        elif isinstance(error, commands.errors.MemberNotFound):
-            await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-        else:
-            await ctx.send(f"Mute failed: {error}")
+    # @mute.error
+    # async def mute_error(self, ctx, error):
+    #     if isinstance(error, commands.errors.MissingRequiredArgument):
+    #         await ctx.send("Missing Argument: member")
+    #     elif isinstance(error, commands.errors.MemberNotFound):
+    #         await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+    #     else:
+    #         await ctx.send(f"Mute failed: {error}")
 
     @commands.command(brief="Unmute a user", description="Unmute a user")
     @commands.check_any(commands.is_owner(),
