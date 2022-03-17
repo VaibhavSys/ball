@@ -56,11 +56,14 @@ class Mod(commands.Cog):
         else:
             await ctx.send("Removing role Failed")
 
-    @commands.command(brief="Mute a user", description="Mute a user")
+    @commands.command(brief="Mute a user")
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(manage_messages=True))
     @commands.guild_only()
     async def mute(self, ctx, member: nextcord.Member, time="10m", *, reason=None):
+        """
+        Use the discord timeout feature to timeout a member, max time is 1 week
+        """
         unit = time[-1]
         time = int(time[:-1])
         if unit == "s" and time < 604800:
@@ -76,35 +79,46 @@ class Mod(commands.Cog):
         else:
             return await ctx.send("Invalid time/unit or time is more than 1 week.")
 
-        await ctx.send(f"Time: {time}, Unit: {unit}, Delta: {delta}")
+        await member.edit(timeout=delta, reason=reason)    
         await ctx.reply(f"{member.mention} has been timed out by {ctx.author.mention} with reason '{reason}' for {f'{time}{unit}'}.")
 
+    @commands.command(brief="Traditonal mute a user")
+    @commands.check_any(commands.is_owner()
+                        or commands.has_permissions(manage_messages=True))
+    @commands.guild_only()
+    async def tmute(self, ctx, member: nextcord.Member, *, reason=None):
+        """
+        Traditonal mute a user by adding a muted role with no permissons to send messages, speak in voice channels, react to messages and join stages
+        """
+        try:
+            mutedrole = nextcord.utils.get(ctx.guild.roles, name="Muted")
+        except:
+            muted = await ctx.guild.create_role(name="Muted", reason="Used for muting.")
+            for channel in ctx.guild.channels:
+                await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
 
-    # @mute.error
-    # async def mute_error(self, ctx, error):
-    #     if isinstance(error, commands.errors.MissingRequiredArgument):
-    #         await ctx.send("Missing Argument: member")
-    #     elif isinstance(error, commands.errors.MemberNotFound):
-    #         await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-    #     else:
-    #         await ctx.send(f"Mute failed: {error}")
+        await member.add_roles(mutedrole)
+        await ctx.reply(f"{member} has been muted by {ctx.author.mention} with reason '{reason}'")
 
     @commands.command(brief="Unmute a user", description="Unmute a user")
     @commands.check_any(commands.is_owner(),
+        commands.has_permissions(moderate_members=True))
+    @commands.guild_only()
+    async def unmute(self, ctx, member: nextcord.Member, *, reason=None):
+        """
+        Remove a member from timeout
+        """
+        await member.edit(timeout=None, reason=reason)
+        await ctx.reply(f"{member.mention} has been removed from timeout by {ctx.author.mention} with reason '{reason}'.")
+
+    @commands.command(brief="Traditonal unmute a user")
+    @commands.check_any(commands.is_owner(),
         commands.has_permissions(manage_messages=True))
     @commands.guild_only()
-    async def unmute(self, ctx, user: nextcord.Member, *, reason=None):
-        await user.remove_roles(nextcord.utils.get(ctx.guild.roles, name="Muted"))
-        await ctx.send(f"{user.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
-
-    @unmute.error
-    async def unmute_error(self, ctx, error):
-        if isinstance(error, commands.errors.MemberNotFound):
-            await ctx.send(f"I coudn't find that member.")
-        elif isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("Missing Argument: member")
-        else:
-            await ctx.send(f"Unmute failed: {error}")
+    async def tunmute(self, ctx, member: nextcord.Member, *, reason=None):
+        mutedrole = nextcord.utils.get(ctx.guild.roles, name="Muted")
+        await member.remove_roles(mutedrole)
+        await ctx.reply(f"{ctx.author.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 
     @commands.command(brief="Mute a user in voice channel",
                       description="Mute a user in voice channel")
@@ -113,7 +127,7 @@ class Mod(commands.Cog):
     @commands.guild_only()
     async def vcmute(self, ctx, member: nextcord.Member, *, reason=None):
         await member.edit(mute=True)
-        await ctx.send(f"{member} has been successfully voice-muted by {ctx.author.mention} with reason '{reason}'")
+        await ctx.reply(f"{member} has been successfully voice-muted by {ctx.author.mention} with reason '{reason}'")
 
     @vcmute.error
     async def vcmute_error(self, ctx, error):
@@ -123,8 +137,8 @@ class Mod(commands.Cog):
             await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
         elif isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("Missing Argument: member")
-        else:
-            await ctx.send(f"Voice-mute failed: {error}")
+        # else:
+            # await ctx.send(f"Voice-mute failed: {error}")
 
     @commands.command(brief="Unmute a user in voice channel",
                       description="Unmute a user in voice channel")
@@ -133,18 +147,18 @@ class Mod(commands.Cog):
     @commands.guild_only()
     async def vcunmute(self, ctx, member: nextcord.Member, *, reason=None):
         await member.edit(mute=False)
-        await ctx.send(f"{member} has been successfully voice-unmuted by {ctx.author.mention} with reason '{reason}'")
+        await ctx.reply(f"{member} has been successfully voice-unmuted by {ctx.author.mention} with reason '{reason}'")
 
-    @vcunmute.error
-    async def vcunmute_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingPermissions):
-            await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Mute Members) to use this command.")
-        elif isinstance(error, commands.errors.MemberNotFound):
-            await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
-        elif isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("Missing Argument: member")
-        else:
-            await ctx.send(f"Voice unmute failed: {error}")
+    # @vcunmute.error
+    # async def vcunmute_error(self, ctx, error):
+    #     if isinstance(error, commands.errors.MissingPermissions):
+    #         await ctx.send(f"{ctx.author.mention}: You do not have enough permissions (Mute Members) to use this command.")
+    #     elif isinstance(error, commands.errors.MemberNotFound):
+    #         await ctx.send(f"{ctx.author.mention}: I coudn't find that member.")
+    #     elif isinstance(error, commands.errors.MissingRequiredArgument):
+    #         await ctx.send("Missing Argument: member")
+    #     else:
+    #         await ctx.send(f"Voice unmute failed: {error}")
 
     @commands.command(brief="Kick a user from guild",
                       description="Kick a user from guild")

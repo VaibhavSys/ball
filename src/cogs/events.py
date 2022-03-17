@@ -9,11 +9,35 @@ class Events(commands.Cog):
         self.bot = bot
 
     def _remove(self, name):
-    	if "(AFK)" in name.split():
-    		return " ",join(name.split()[1:j])
+        """
+        For AFK command, removes the AFK from name and returns the previous nickname of member
+        """
+        if "(AFK)" in name.split():
+            return " ",join(name.split()[1:j])
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.reply(f"Missing required argument(s)")
+        elif isinstance(error, commands.errors.MemberNotFound):
+            await ctx.reply("I coudn't find that member.")
+        elif isinstance(error, commands.errors.MissingPermissions):
+            await ctx.reply("You do not have enough permissions to use this command.")
+        elif isinstance(error, commands.errors.PrivateMessageOnly):
+            await ctx.reply("This command can only be used in private messages.")
+        elif isinstance(error, commands.errors.NoPrivateMessage):
+            await ctx.reply("This command can not be used in private messages.")
+        elif isinstance(error, commands.errors.CommandNotFound):
+            await ctx.reply("Not a valid command.")
+        elif isinstance(error, commands.errors.TooManyArguments):
+            await ctx.reply("Too many arguments.")
+
 
     @commands.Cog.listener()
     async def on_guild_channel_create(self, ctx):
+        """
+        For traditonal mute
+        """
         for channel in ctx.guild.channels:
             muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
             await channel.set_permissions(muted, send_messages=False)
@@ -25,20 +49,20 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-    	if message.author.id in afks.keys():
-    		afks.pop(message.author.id)
-    		try:
-    			await message.author.edit(nick=_remove(message.author.display_name))
+        if message.author.id in afks.keys():
+            afks.pop(message.author.id)
+            try:
+                await message.author.edit(nick=_remove(message.author.display_name))
 
-    		except:
-    			pass
+            except:
+                pass
 
-    		await message.channel.send(f"Welcome back {message.author.mention}, I removed your AFK.")
+            await message.channel.send(f"Welcome back {message.author.mention}, I removed your AFK.")
 
-    	for id, reason in afks.items():
-    		member = nextcord.utils.get(message.guild.members, id = id)
-    		if (message.reference and member == (await message.channel.fetch_message(message.reference.message_id)).author) or member.id in message.raw_mentions:
-    			await message.reply(f"{member} is AFK: {reason}")
+        for id, reason in afks.items():
+            member = nextcord.utils.get(message.guild.members, id = id)
+            if (message.reference and member == (await message.channel.fetch_message(message.reference.message_id)).author) or member.id in message.raw_mentions:
+                await message.reply(f"{member} is AFK: {reason}")
 
 
 
