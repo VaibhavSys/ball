@@ -69,6 +69,7 @@ class Mod(commands.Cog):
         Traditional mute a user by adding a muted role with no permissions to send messages,
         speak in voice channels, react to messages and requesting to join stages.
         """
+
         muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
 
         if not muted:    
@@ -91,6 +92,7 @@ class Mod(commands.Cog):
         await member.edit(timeout=None, reason=reason)
         await ctx.reply(f"{member.mention} has been removed from timeout by {ctx.author.mention} with reason '{reason}'.")
 
+        
     @commands.command(brief="Traditonal unmute a member.")
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(manage_messages=True))
