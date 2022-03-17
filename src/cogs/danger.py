@@ -28,18 +28,22 @@ class Confirm(nextcord.ui.View):
         self.value = False
         self.stop()
 
+
 class Danger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"
         self.tmsg = "Timed out!"
 
-    @commands.command(brief="Deletes all channels in guild"
-        , description="Deletes all channels in guild")
+
+    @commands.command()
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke(self, ctx):
+        """
+        Deletes all channels in the guild.
+        """
         view = Confirm()
         await ctx.send(self.rnote)
         await ctx.send("Are you sure that you want delete all channels in this server?", view=view)
@@ -58,12 +62,15 @@ class Danger(commands.Cog):
         else:
             await ctx.send("Cancelled.")
 
-    @commands.command(brief="Deletes all roles in guild",
-                      description="Deletes all roles in guild")
+
+    @commands.command()
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke_roles(self, ctx):
+        """
+        Deletes all roles in guild.
+        """
         view = Confirm()
         await ctx.send(self.rnote)
         await ctx.send("Are you sure that you want to delete all roles in this guild?", view=view)
@@ -82,11 +89,15 @@ class Danger(commands.Cog):
         else:
             await ctx.send("Cancelled.")
 
-    @commands.command(brief="Deletes all emojis in guild")
+
+    @commands.command()
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(administrator=True))
     @commands.guild_only()
     async def nuke_emojis(self, ctx):
+        """
+        Deletes all emojis in guild.
+        """
         view = Confirm()
         await ctx.send(self.rnote)
         await ctx.send("Are you sure that you want to delete all emojis in this guild?", view=view)
