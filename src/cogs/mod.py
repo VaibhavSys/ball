@@ -69,14 +69,15 @@ class Mod(commands.Cog):
         Traditional mute a user by adding a muted role with no permissions to send messages,
         speak in voice channels, react to messages and requesting to join stages.
         """
-        try:
-            mutedrole = nextcord.utils.get(ctx.guild.roles, name="Muted")
-        except:
+
+        muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
+
+        if not muted:    
             muted = await ctx.guild.create_role(name="Muted", reason="Used for muting.")
             for channel in ctx.guild.channels:
                 await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
 
-        await member.add_roles(mutedrole)
+        await member.add_roles(muted)
         await ctx.reply(f"{member} has been muted by {ctx.author.mention} with reason '{reason}'")
 
     @commands.command()
@@ -91,6 +92,7 @@ class Mod(commands.Cog):
         await member.edit(timeout=None, reason=reason)
         await ctx.reply(f"{member.mention} has been removed from timeout by {ctx.author.mention} with reason '{reason}'.")
 
+        
     @commands.command(brief="Traditonal unmute a member.")
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(manage_messages=True))
@@ -100,8 +102,8 @@ class Mod(commands.Cog):
         Traditional unmute, unmute a member muted by traditional mute.
         """
         
-        mutedrole = nextcord.utils.get(ctx.guild.roles, name="Muted")
-        await member.remove_roles(mutedrole)
+        muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
+        await member.remove_roles(muted)
         await ctx.reply(f"{ctx.author.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 
     @commands.command(brief="Voice-mute a member.")
