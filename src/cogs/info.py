@@ -152,6 +152,23 @@ class Info(commands.Cog):
         embed.add_field(name="AFK Note: ", value=reason)
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def afk(self, ctx, *, reason = "Not provided"):
+        member = ctx.author
+        if member.id in afks.keys():
+            afks.pop(member.id)
+        else:
+            try:
+                await member.edit(nick = f"(AFK) {member.display_name}")
+
+            except:
+                pass
+        afks[member.id] = reason
+        embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
+        embed.set_thumbnail(url = member.display_avatar)
+        embed.add_field(name="AFK Note: ", value=reason)
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Info(bot))

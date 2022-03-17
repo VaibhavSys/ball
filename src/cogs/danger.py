@@ -28,14 +28,13 @@ class Confirm(nextcord.ui.View):
         self.value = False
         self.stop()
 
-
 class Danger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"
         self.tmsg = "Timed out!"
 
-
+        
     @commands.command()
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(administrator=True))
@@ -62,7 +61,7 @@ class Danger(commands.Cog):
         else:
             await ctx.send("Cancelled.")
 
-
+            
     @commands.command()
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(administrator=True))
@@ -88,7 +87,6 @@ class Danger(commands.Cog):
                     await ctx.send(f"Unable to delete {role.name}!")
         else:
             await ctx.send("Cancelled.")
-
 
     @commands.command()
     @commands.check_any(commands.is_owner(),
