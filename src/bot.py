@@ -8,7 +8,7 @@ from os import getenv
 
 intents = nextcord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix="-", intents=intents)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), intents=intents)
 cogs = []
 
 
@@ -40,7 +40,11 @@ async def on_ready():
 async def on_disconnect():
     print("Disconnected.")
 
+
 for file in os.listdir("./cogs"):
+    """
+    Load all cogs in cogs directory.
+    """
     if file.endswith(".py"):
         name = file[:-3]
         cog = f"cogs.{name}"

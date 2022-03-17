@@ -7,18 +7,28 @@ class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(brief="Latency of bot", description="Latency of bot")
+    @commands.command()
     async def ping(self, ctx):
+        """
+        Get the latency of the bot.
+        """
         await ctx.send(f'Pong! {round (self.bot.latency * 1000)} ms')
 
-    @commands.command(brief="Say hello and tell the prefix",
-                      description="Say hello and tell the prefix")
+
+    @commands.command()
     async def sayhi(self, ctx):
+        """
+        Say hello and tell the prefix.
+        """
         await ctx.send(f"Hello {ctx.author.mention}! My prefix is '-'.")
 
-    @commands.command(brief="Information about a user",
-                      description="Information about a user")
-    async def userinfo(self, ctx, member: nextcord.Member):
+
+    @commands.command()
+    async def userinfo(self, ctx, member: nextcord.Member=None):
+        """
+        Get information about a member.
+        """
+        member = member or ctx.author
         embed = nextcord.Embed(
             title=f"UserInfo of {member}",
             colour=nextcord.Colour.green())
@@ -42,14 +52,12 @@ class Info(commands.Cog):
         """)
         await ctx.send(embed=embed)
 
-    @userinfo.error
-    async def userinfo_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("Missing argument: member")
 
-    @commands.command(brief="Information about the current guild",
-                      description="Information about the current guild")
+    @commands.command()
     async def guildinfo(self, ctx):
+        """
+        Get information about the guild.
+        """
         humans = 0
         bots = 0
 
@@ -78,9 +86,12 @@ class Info(commands.Cog):
                                  """)
         await ctx.send(embed=embed)
 
-    @commands.command(brief="Information about a emoji",
-                      description="Information about a emoji")
+
+    @commands.command()
     async def emojiinfo(self, ctx, emoji: nextcord.Emoji):
+        """
+        Get information about a emoji.
+        """
         embed = nextcord.Embed(
             title=f"Info of {emoji}",
             colour=nextcord.Colour.green())
@@ -96,14 +107,12 @@ class Info(commands.Cog):
                           """)
         await ctx.send(embed=embed)
 
-    @emojiinfo.error
-    async def emojiinfo_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("Missing argument: emoji")
 
-    @commands.command(brief="Information about a invite",
-                      description="Information about a invite")
+    @commands.command()
     async def inviteinfo(self, ctx, invite: nextcord.Invite):
+        """
+        Get information about a invite.
+        """
         embed = nextcord.Embed(
             title=f"Info of {invite}",
             colour=nextcord.Colour.green())
@@ -114,7 +123,6 @@ class Info(commands.Cog):
         embed.description = (f"""
                              Code: {invite.code}
                              ID: {invite.id}
-                             Inviter: {invite.inviter}
                              Channel: {invite.channel}
                              Guild: {invite.guild}
                              Uses: {invite.uses}
@@ -123,10 +131,26 @@ class Info(commands.Cog):
                              """)
         await ctx.send(embed=embed)
 
-    @inviteinfo.error
-    async def inviteinfo_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("Missing argument: invite")
+
+    @commands.command()
+    async def afk(self, ctx, *, reason = "Not provided."):
+        """
+        Go afk and optionally enter a reason.
+        """
+        member = ctx.author
+        if member.id in afks.keys():
+            afks.pop(member.id)
+        else:
+            try:
+                await member.edit(nick = f"(AFK) {member.display_name}")
+
+            except:
+                pass
+        afks[member.id] = reason
+        embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
+        embed.set_thumbnail(url = member.display_avatar)
+        embed.add_field(name="AFK Note: ", value=reason)
+        await ctx.send(embed=embed)
 
     @commands.command()
     async def afk(self, ctx, *, reason = "Not provided"):
