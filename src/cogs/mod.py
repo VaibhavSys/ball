@@ -100,8 +100,8 @@ class Mod(commands.Cog):
         Traditional unmute, unmute a member muted by traditional mute.
         """
         
-        mutedrole = nextcord.utils.get(ctx.guild.roles, name="Muted")
-        await member.remove_roles(mutedrole)
+        muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
+        await member.remove_roles(muted)
         await ctx.reply(f"{ctx.author.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 
     @commands.command(brief="Voice-mute a member.")
