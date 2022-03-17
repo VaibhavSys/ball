@@ -30,6 +30,7 @@ class Errors(commands.Cog):
                 Error:
                 {error}
                 """)
+            raise(error)
 
 def setup(bot):
     bot.add_cog(Errors(bot))

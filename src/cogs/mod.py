@@ -69,14 +69,14 @@ class Mod(commands.Cog):
         Traditional mute a user by adding a muted role with no permissions to send messages,
         speak in voice channels, react to messages and requesting to join stages.
         """
-        try:
-            mutedrole = nextcord.utils.get(ctx.guild.roles, name="Muted")
-        except:
+        muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
+
+        if not muted:    
             muted = await ctx.guild.create_role(name="Muted", reason="Used for muting.")
             for channel in ctx.guild.channels:
                 await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
 
-        await member.add_roles(mutedrole)
+        await member.add_roles(muted)
         await ctx.reply(f"{member} has been muted by {ctx.author.mention} with reason '{reason}'")
 
     @commands.command()
