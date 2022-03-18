@@ -4,6 +4,8 @@ import os
 import json
 import requests
 
+RANDOMMER_API = os.getenv("RANDOMMER_API")
+
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -34,6 +36,7 @@ class Fun(commands.Cog):
         """)
         await ctx.send(embed=embed)
 
+
     @commands.command()
     async def rfullname(self, ctx):
         """
@@ -42,7 +45,7 @@ class Fun(commands.Cog):
 
         headers = {
             'accept': '*/*',
-            'X-Api-Key': os.getenv("RANDOMMER_API"),
+            'X-Api-Key': RANDOMMER_API,
         }
 
         params = (
@@ -67,7 +70,7 @@ class Fun(commands.Cog):
 
         headers = {
             'accept': '*/*',
-            'X-Api-Key': os.getenv("RANDOMMER_API"),
+            'X-Api-Key': RANDOMMER_API,
         }
 
         params = (
@@ -83,6 +86,7 @@ class Fun(commands.Cog):
         respsend = respjson[0]
         await ctx.reply(respsend)
 
+
     @commands.command()
     async def rsurname(self, ctx):
         """
@@ -91,7 +95,7 @@ class Fun(commands.Cog):
 
         headers = {
             'accept': '*/*',
-            'X-Api-Key': os.getenv("RANDOMMER_API"),
+            'X-Api-Key': RANDOMMER_API,
         }
 
         params = (
