@@ -12,7 +12,10 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), intents=inten
 cogs = []
 
 
-# Logging Setup
+"""
+Logging setup.
+"""
+
 logger = logging.getLogger('nextcord')
 logger.setLevel(logging.INFO)
 handler = logging.FileHandler(
@@ -25,10 +28,13 @@ handler.setFormatter(
 logger.addHandler(handler)
 
 
-# Events
+"""
+Events
+"""
+
 @bot.event
 async def on_connect():
-    print("----------\nConnected successfully.\n----------")
+    print("Connected.")
 
 
 @bot.event
@@ -45,6 +51,7 @@ for file in os.listdir("./cogs"):
     """
     Load all cogs in cogs directory.
     """
+
     if file.endswith(".py"):
         name = file[:-3]
         cog = f"cogs.{name}"
