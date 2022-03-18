@@ -143,7 +143,7 @@ class Info(commands.Cog):
         """
         Go afk and optionally provide a reason.
         """
-        
+
         member = ctx.author
         if member.id in afks.keys():
             afks.pop(member.id)
@@ -153,6 +153,7 @@ class Info(commands.Cog):
 
             except:
                 pass
+
         afks[member.id] = reason
         embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
         embed.set_thumbnail(url = member.display_avatar)
