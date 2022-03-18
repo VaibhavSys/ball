@@ -1,7 +1,8 @@
 import nextcord.ext
 from nextcord.ext import commands
 import os
-
+import json
+import requests
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -12,6 +13,7 @@ class Fun(commands.Cog):
         """
         Get joke of the day using jokes.one API.
         """
+
         url = 'https://api.jokes.one/jod?category=knock-knock'
         api_token = None
         headers = {'content-type': 'application/json',
@@ -37,6 +39,7 @@ class Fun(commands.Cog):
         """
         Get a random fullname using randommer API.
         """
+
         headers = {
             'accept': '*/*',
             'X-Api-Key': os.getenv("RANDOMMER_API"),
@@ -44,7 +47,7 @@ class Fun(commands.Cog):
 
         params = (
             ('nameType', 'fullname'),
-            ('quantity', quantity),
+            ('quantity', 1),
         )
 
         response = requests.get(
