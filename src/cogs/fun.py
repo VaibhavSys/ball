@@ -35,7 +35,7 @@ class Fun(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def randfname(self, ctx, quantity=1):
+    async def rfullname(self, ctx):
         """
         Get a random fullname using randommer API.
         """
@@ -56,7 +56,56 @@ class Fun(commands.Cog):
             params=params)
         respjson = json.loads(response.text)
         respsend = respjson[0]
-        await ctx.send(respsend)
+        await ctx.reply(respsend)
+
+
+    @commands.command()
+    async def rfirstname(self, ctx):
+        """
+        Get a random firstname using randommer API.
+        """
+
+        headers = {
+            'accept': '*/*',
+            'X-Api-Key': os.getenv("RANDOMMER_API"),
+        }
+
+        params = (
+            ('nameType', 'firstname'),
+            ('quantity', 1),
+        )
+
+        response = requests.get(
+            'https://randommer.io/api/Name',
+            headers=headers,
+            params=params)
+        respjson = json.loads(response.text)
+        respsend = respjson[0]
+        await ctx.reply(respsend)
+
+    @commands.command()
+    async def rsurname(self, ctx):
+        """
+        Get a random surname using randommer API.
+        """
+
+        headers = {
+            'accept': '*/*',
+            'X-Api-Key': os.getenv("RANDOMMER_API"),
+        }
+
+        params = (
+            ('nameType', 'surname'),
+            ('quantity', 1),
+        )
+
+        response = requests.get(
+            'https://randommer.io/api/Name',
+            headers=headers,
+            params=params)
+        respjson = json.loads(response.text)
+        respsend = respjson[0]
+        await ctx.reply(respsend)
 
 
 def setup(bot):
