@@ -12,6 +12,7 @@ class Info(commands.Cog):
         """
         Get the latency of the bot.
         """
+
         await ctx.send(f'Pong! {round (self.bot.latency * 1000)} ms')
 
 
@@ -20,6 +21,7 @@ class Info(commands.Cog):
         """
         Say hello and tell the prefix.
         """
+
         await ctx.send(f"Hello {ctx.author.mention}! My prefix is '-'.")
 
 
@@ -28,6 +30,7 @@ class Info(commands.Cog):
         """
         Get information about a member.
         """
+
         member = member or ctx.author
         embed = nextcord.Embed(
             title=f"UserInfo of {member}",
@@ -58,6 +61,7 @@ class Info(commands.Cog):
         """
         Get information about the guild.
         """
+
         humans = 0
         bots = 0
 
@@ -92,6 +96,7 @@ class Info(commands.Cog):
         """
         Get information about a emoji.
         """
+
         embed = nextcord.Embed(
             title=f"Info of {emoji}",
             colour=nextcord.Colour.green())
@@ -113,6 +118,7 @@ class Info(commands.Cog):
         """
         Get information about a invite.
         """
+
         embed = nextcord.Embed(
             title=f"Info of {invite}",
             colour=nextcord.Colour.green())
@@ -135,8 +141,9 @@ class Info(commands.Cog):
     @commands.command()
     async def afk(self, ctx, *, reason = "Not provided."):
         """
-        Go afk and optionally enter a reason.
+        Go afk and optionally provide a reason.
         """
+
         member = ctx.author
         if member.id in afks.keys():
             afks.pop(member.id)
@@ -146,23 +153,7 @@ class Info(commands.Cog):
 
             except:
                 pass
-        afks[member.id] = reason
-        embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
-        embed.set_thumbnail(url = member.display_avatar)
-        embed.add_field(name="AFK Note: ", value=reason)
-        await ctx.send(embed=embed)
 
-    @commands.command()
-    async def afk(self, ctx, *, reason = "Not provided"):
-        member = ctx.author
-        if member.id in afks.keys():
-            afks.pop(member.id)
-        else:
-            try:
-                await member.edit(nick = f"(AFK) {member.display_name}")
-
-            except:
-                pass
         afks[member.id] = reason
         embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
         embed.set_thumbnail(url = member.display_avatar)
