@@ -8,6 +8,10 @@ class Errors(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        """
+        Error handling for the most common errors.
+        """
+
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.reply(f"Missing required argument(s)")
         elif isinstance(error, commands.errors.MemberNotFound):
