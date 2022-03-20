@@ -29,6 +29,10 @@ class Confirm(nextcord.ui.View):
         self.stop()
 
 class Danger(commands.Cog):
+    """
+    Dangerous commands! Use with caution!
+    """
+
     def __init__(self, bot):
         self.bot = bot
         self.rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"

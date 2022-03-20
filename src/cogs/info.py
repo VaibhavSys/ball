@@ -4,6 +4,10 @@ from nextcord.ext import commands
 from afks import afks
 
 class Info(commands.Cog):
+    """
+    Get information about stuff.
+    """
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -12,7 +16,6 @@ class Info(commands.Cog):
         """
         Get the latency of the bot.
         """
-
         await ctx.send(f'Pong! {round (self.bot.latency * 1000)} ms')
 
 
@@ -21,7 +24,6 @@ class Info(commands.Cog):
         """
         Say hello and tell the prefix.
         """
-
         await ctx.send(f"Hello {ctx.author.mention}! My prefix is '-'.")
 
 
@@ -30,7 +32,6 @@ class Info(commands.Cog):
         """
         Get information about a member.
         """
-
         member = member or ctx.author
         embed = nextcord.Embed(
             title=f"UserInfo of {member}",
@@ -61,7 +62,6 @@ class Info(commands.Cog):
         """
         Get information about the guild.
         """
-
         humans = 0
         bots = 0
 
@@ -96,7 +96,6 @@ class Info(commands.Cog):
         """
         Get information about a emoji.
         """
-
         embed = nextcord.Embed(
             title=f"Info of {emoji}",
             colour=nextcord.Colour.green())
@@ -118,7 +117,6 @@ class Info(commands.Cog):
         """
         Get information about a invite.
         """
-
         embed = nextcord.Embed(
             title=f"Info of {invite}",
             colour=nextcord.Colour.green())
@@ -143,7 +141,6 @@ class Info(commands.Cog):
         """
         Go afk and optionally provide a reason.
         """
-
         member = ctx.author
         if member.id in afks.keys():
             afks.pop(member.id)

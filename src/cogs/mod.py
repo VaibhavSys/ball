@@ -6,6 +6,10 @@ from datetime import timedelta
 
 
 class Mod(commands.Cog):
+    """
+    Moderate your guild with these mighty commands.
+    """
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -17,7 +21,6 @@ class Mod(commands.Cog):
         """
         Add a role to a member.
         """
-
         await member.add_roles(roles)
         await ctx.send(f"{member.mention} has been given role(s) {roles.name}({roles.id}) by {ctx.author.mention}")
 
@@ -30,7 +33,6 @@ class Mod(commands.Cog):
         """
         Remove a role from a member.
         """
-
         await member.remove_roles(roles)
         await ctx.send(f"{member.mention} has been removed from {roles.name}({roles.id}) role(s) by {ctx.author.mention}")
 
@@ -43,7 +45,6 @@ class Mod(commands.Cog):
         """
         Use the discord timeout feature to timeout a member, max time is 1 week.
         """
-
         unit = time[-1]
         time = int(time[:-1])
         if unit == "s" and time < 604800:
@@ -72,7 +73,6 @@ class Mod(commands.Cog):
         Traditional mute a user by adding a muted role with no permissions to send messages,
         speak in voice channels, react to messages and requesting to join stages.
         """
-
         muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
 
         if not muted:    
@@ -91,7 +91,6 @@ class Mod(commands.Cog):
         """
         Remove a member from timeout.
         """
-        
         await member.edit(timeout=None, reason=reason)
         await ctx.reply(f"{member.mention} has been removed from timeout by {ctx.author.mention} with reason '{reason}'.")
 
@@ -102,8 +101,7 @@ class Mod(commands.Cog):
     async def tunmute(self, ctx, member: nextcord.Member, *, reason=None):
         """
         Traditional unmute, unmute a member muted by traditional mute.
-        """
-        
+        """    
         muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(muted)
         await ctx.reply(f"{ctx.author.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
@@ -114,9 +112,8 @@ class Mod(commands.Cog):
     @commands.guild_only()
     async def vcmute(self, ctx, member: nextcord.Member, *, reason=None):
         """
-        Voice-mute a member so that they cannot talk in a voice channel anymore.
-        """
-        
+        Voice mute a member so that they cannot talk in a voice channel anymore.
+        """ 
         await member.edit(mute=True)
         await ctx.reply(f"{member} has been successfully voice-muted by {ctx.author.mention} with reason '{reason}'")
 
@@ -127,9 +124,8 @@ class Mod(commands.Cog):
     @commands.guild_only()
     async def vcunmute(self, ctx, member: nextcord.Member, *, reason=None):
         """
-        Voice-unmute a member so that they can talk in a voice channel again.
+        Voice unmute a member so that they can talk in a voice channel again.
         """
-        
         await member.edit(mute=False)
         await ctx.reply(f"{member} has been successfully voice-unmuted by {ctx.author.mention} with reason '{reason}'")
 
@@ -142,7 +138,6 @@ class Mod(commands.Cog):
         """
         Kick a user from the guild.
         """
-        
         await ctx.guild.kick(user=member, reason=reason)
         await ctx.send(f"User {member}({member.id})) has kicked by {ctx.author.mention} with reason '{reason}''.")
 
@@ -155,7 +150,6 @@ class Mod(commands.Cog):
         """
         Ban a member from the guild.
         """
-        
         await member.ban(reason=reason)
         await ctx.send(f"{member} has been banned by {ctx.author.mention} with reason '{reason}'.")
 
@@ -168,7 +162,6 @@ class Mod(commands.Cog):
         """
         Unban a previously banned member from the guild.
         """
-        
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split("#")
 
@@ -180,6 +173,7 @@ class Mod(commands.Cog):
                 await ctx.guild.unban(user, reason=reason)
                 await ctx.send(f"{user.name}#{user.discriminator} has been unbanned by {ctx.author.mention} with reason '{reason}'")
 
+
     @commands.command(brief="Lock a channel.")
     @commands.check_any(commands.is_owner(),
         commands.has_permissions(manage_messages=True))
@@ -188,7 +182,6 @@ class Mod(commands.Cog):
         """
         Lock a channel, restrict sending messages permission to @everyone role.
         """
-        
         channel = channel or ctx.channel
         try:
             overwrite = channel.overwrites_for(ctx.guild.default_role)
@@ -207,7 +200,6 @@ class Mod(commands.Cog):
         """
         Unlock a previously locked channel.
         """
-
         channel = channel or ctx.channel
         try:
             overwrite = channel.overwrites_for(ctx.guild.default_role)
@@ -226,7 +218,6 @@ class Mod(commands.Cog):
         """
         Delete messages in bulk.
         """
-        
         await ctx.channel.purge(limit=limit)
         await ctx.send(f"Purged {limit} messages.", delete_after=3)
 
@@ -239,7 +230,6 @@ class Mod(commands.Cog):
         """Changes channel's slowmode setting.
         Use without parameters to disable.
         """
-        
         if unit == "s":
             interval = timedelta(seconds=interval).total_seconds()
         elif unit == "m":
