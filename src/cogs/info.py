@@ -4,6 +4,10 @@ from nextcord.ext import commands
 from afks import afks
 
 class Info(commands.Cog):
+    """
+    Get information about stuff.
+    """
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -143,7 +147,6 @@ class Info(commands.Cog):
         """
         Go afk and optionally provide a reason.
         """
-
         member = ctx.author
         if member.id in afks.keys():
             afks.pop(member.id)
@@ -153,7 +156,7 @@ class Info(commands.Cog):
 
             except:
                 pass
-
+              
         afks[member.id] = reason
         embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
         embed.set_thumbnail(url = member.display_avatar)
