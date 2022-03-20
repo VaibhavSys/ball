@@ -7,6 +7,10 @@ import requests
 RANDOMMER_API = os.getenv("RANDOMMER_API")
 
 class Fun(commands.Cog):
+    """
+    Have some fun!
+    """
+    
     def __init__(self, bot):
         self.bot = bot
 
