@@ -106,10 +106,6 @@ class Mod(commands.Cog):
         await member.remove_roles(muted)
         await ctx.reply(f"{ctx.author.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
 
-    
-
-
-    
 
     @commands.command()
     @commands.check_any(commands.is_owner(),
