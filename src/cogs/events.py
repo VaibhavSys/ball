@@ -1,8 +1,8 @@
-import nextcord
 import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
 from afks import afks
+
 
 class Events(commands.Cog):
     def __init__(self, bot):
