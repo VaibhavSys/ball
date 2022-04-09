@@ -30,7 +30,7 @@ class Snipe(commands.Cog):
 
 
     @commands.command()
-    async def snipe(self, ctx):
+    async def snipe(self, ctx, channel: nextcord.TextChannel = None):
         """
         Get the last deleted message in a channel.
         """
@@ -38,17 +38,21 @@ class Snipe(commands.Cog):
         global snipe_message_content
         global snipe_message_id
 
+        channel = channel or ctx.channel
+        # if channel is not None:
+            # channel = ctx.channel
+
         try:
             embed = nextcord.Embed(title="Sniped that message!", colour=nextcord.Colour.blue())
-            embed.description = snipe_message_content[ctx.channel.id]
+            embed.description = snipe_message_content[channel.id]
             embed.add_field(name="Message ID", value=snipe_message_id)
-            embed.set_author(name=snipe_message_author[ctx.channel.id], icon_url=snipe_message_author[ctx.channel.id].display_avatar.url)
+            embed.set_author(name=snipe_message_author[channel.id], icon_url=snipe_message_author[channel.id].display_avatar.url)
             embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.display_avatar.url)
             await ctx.send(embed=embed)
 
         except KeyError:
             embed = nextcord.Embed(title="Ran out of bullets.", colour=nextcord.Colour.blue())
-            embed.description = "No message recently deleted found in this channel."
+            embed.description = f"No message recently deleted found in {channel}."
             embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.display_avatar.url)
             await ctx.send(embed=embed)
 
