@@ -47,7 +47,7 @@ async def on_disconnect():
     print("Disconnected.")
 
 
-for file in os.listdir("./cogs"):
+for file in os.listdir("src/cogs"):
     """
     Load all cogs in cogs directory.
     """
