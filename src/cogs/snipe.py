@@ -45,7 +45,7 @@ class Snipe(commands.Cog):
         try:
             embed = nextcord.Embed(title="Sniped that message!", colour=nextcord.Colour.blue())
             embed.description = snipe_message_content[channel.id]
-            embed.add_field(name="Message ID", value=snipe_message_id)
+            embed.add_field(name="Message ID", value=snipe_message_id[channel.id])
             embed.set_author(name=snipe_message_author[channel.id], icon_url=snipe_message_author[channel.id].display_avatar.url)
             embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.display_avatar.url)
             await ctx.send(embed=embed)
