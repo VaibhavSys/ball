@@ -25,14 +25,13 @@ class Errors(commands.Cog):
         elif isinstance(error, commands.errors.NoPrivateMessage):
             await ctx.reply("This command can not be used in private messages.")
         elif isinstance(error, commands.errors.CommandNotFound):
-            await ctx.reply("Not a valid command.")
+            await ctx.reply("Command Not Found.", mention_author=False)
         elif isinstance(error, commands.errors.TooManyArguments):
             await ctx.reply("Too many arguments.")
         else:
             await ctx.reply(f"""
                 An error has occurred, if this is unexpected then please report it to the developer.
-                Error:
-                {error}
+                Error:\n{error}
                 """)
             raise(error)
 
