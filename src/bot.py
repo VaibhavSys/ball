@@ -32,19 +32,10 @@ logger.addHandler(handler)
 Events
 """
 
-@bot.event
-async def on_connect():
-    print("Connected.")
-
 
 @bot.event
 async def on_ready():
     print(f"----------\nLogged in as {bot.user}({bot.user.id}).\n----------")
-
-
-@bot.event
-async def on_disconnect():
-    print("Disconnected.")
 
 
 for file in os.listdir("./cogs"):
