@@ -3,7 +3,7 @@ import os
 import nextcord.ext
 from nextcord.ext import commands
 import logging
-import keep_alive
+import _helper as hp
 from os import getenv
 
 intents = nextcord.Intents.default()
@@ -13,41 +13,13 @@ cogs = []
 
 
 """
-Logging setup.
-"""
-
-logger = logging.getLogger('nextcord')
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler(
-    filename='nextcord.log', encoding='utf-8', mode='w'
-)
-
-handler.setFormatter(
-    logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s')
-)
-logger.addHandler(handler)
-
-
-"""
 Events
 """
-
-@bot.event
-async def on_connect():
-    print("Connected.")
-
-
 @bot.event
 async def on_ready():
     print(f"----------\nLogged in as {bot.user}({bot.user.id}).\n----------")
 
 
-@bot.event
-async def on_disconnect():
-    print("Disconnected.")
-
-
-for file in os.listdir("src/cogs"):
     """
     Load all cogs in cogs directory.
     """
@@ -60,5 +32,4 @@ for file in os.listdir("src/cogs"):
         print(f"Loaded cog {name}.")
 
 
-keep_alive.keep_alive()
 bot.run(getenv("TOKEN"))
