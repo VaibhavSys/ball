@@ -45,7 +45,7 @@ class Events(commands.Cog):
                 await message.author.edit(nick=self._remove(message.author.display_name))
 
             except:
-                await ctx.send(message.channel.send("I couldn't remove '(AFK)' from your name!"))
+                await message.channel.send("I couldn't remove '(AFK)' from your name!")
 
             await message.channel.send(f"Welcome back {message.author.mention}, I removed your AFK.")
 
