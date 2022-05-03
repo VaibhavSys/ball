@@ -3,3 +3,4 @@ asyncio
 requests
 flask
 pymongo
+dnspython
