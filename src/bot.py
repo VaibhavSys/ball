@@ -3,7 +3,7 @@ import os
 import nextcord.ext
 from nextcord.ext import commands
 import logging
-#import keep_alive
+import _helper as hp
 from os import getenv
 
 intents = nextcord.Intents.default()
@@ -13,26 +13,8 @@ cogs = []
 
 
 """
-Logging setup.
-"""
-
-logger = logging.getLogger('nextcord')
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler(
-    filename='nextcord.log', encoding='utf-8', mode='w'
-)
-
-handler.setFormatter(
-    logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s')
-)
-logger.addHandler(handler)
-
-
-"""
 Events
 """
-
-
 @bot.event
 async def on_ready():
     print(f"----------\nLogged in as {bot.user}({bot.user.id}).\n----------")
