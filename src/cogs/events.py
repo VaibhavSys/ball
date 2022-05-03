@@ -2,7 +2,9 @@ import nextcord.ext
 import nextcord.utils
 from nextcord.ext import commands
 from afks import afks
-
+import nextcord.utils
+import random
+import _helper as hp
 
 class Events(commands.Cog):
     def __init__(self, bot):
@@ -51,6 +53,19 @@ class Events(commands.Cog):
             member = nextcord.utils.get(message.guild.members, id = id)
             if (message.reference and member == (await message.channel.fetch_message(message.reference.message_id)).author) or member.id in message.raw_mentions:
                 await message.reply(f"{member} is AFK: {reason}")
+
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        role = nextcord.utils.get(message.guild.roles, name="someone")
+        if role in message.role_mentions and message.author.bot == False:
+            for member in role.members:
+                await member.remove_roles(role)
+                hp.logger.info(f"{member} no longer has the someone role.")
+            someone = random.choice(message.guild.humans)
+            hp.logger.info(f"{someone} now has the someone role.")
+            await someone.add_roles(role)
+
 
 
 def setup(bot):
