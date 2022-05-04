@@ -23,7 +23,7 @@ async def on_ready():
     """
     Load all cogs in cogs directory.
     """
-for file in os.listdir("./cogs"):
+for file in os.listdir("./src/cogs"):
     if file.endswith(".py"):
         name = file[:-3]
         cog = f"cogs.{name}"
