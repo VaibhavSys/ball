@@ -1,8 +1,8 @@
 import nextcord
 import nextcord.ext
 import nextcord.utils
-from nextcord.ext import commands
-from nextcord import Interaction, SlashOption
+from nextcord.ext import commands, application_checks
+from nextcord import Interaction
 
 
 class Confirm(nextcord.ui.View):
@@ -16,7 +16,7 @@ class Confirm(nextcord.ui.View):
     # choice.
     @nextcord.ui.button(label='Confirm', style=nextcord.ButtonStyle.red)
     async def confirm(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
-        await interaction.response.send_message('Confirming...', ephemeral=True)
+        await interaction.response.send_message('The action is being confirmed...', ephemeral=True)
         self.value = True
         self.stop()
 
@@ -24,9 +24,10 @@ class Confirm(nextcord.ui.View):
     # value to `False`
     @nextcord.ui.button(label='Cancel', style=nextcord.ButtonStyle.green)
     async def cancel(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
-        await interaction.response.send_message('Cancelling...', ephemeral=True)
+        await interaction.response.send_message('The action is being cancelled...', ephemeral=True)
         self.value = False
         self.stop()
+
 
 class Danger(commands.Cog):
     """
@@ -38,96 +39,136 @@ class Danger(commands.Cog):
         self.rnote = "NOTE: Make sure that the bot's role is the top role to cause maximum damage!"
         self.tmsg = "Timed out!"
 
-        
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(administrator=True))
-    @commands.guild_only()
-    async def nuke(self, ctx):
+
+    @nextcord.slash_command()
+    @application_checks.guild_only()
+    async def nuke(
+        self,
+        interaction: nextcord.Interaction
+        ):
+        """
+        The main command which contains other nuke commands.
+        """
+        pass
+
+
+    @nuke.subcommand()
+    @application_checks.check_any(
+        application_checks.is_owner(),
+        application_checks.has_permissions(administrator=True)
+        )
+    async def channels(
+        self,
+        interaction: nextcord.Interaction
+        ):
         """
         Deletes all channels in the guild.
         """
         view = Confirm()
-        await ctx.send(self.rnote)
-        await ctx.send("Are you sure that you want delete all channels in this server?", view=view)
+
+        await interaction.send(f"{self.rnote}\nAre you sure that you want to delete all channels in this guild?", view=view)
         await view.wait()
 
         if view.value is None:
-            await ctx.send(self.tmsg)
+            await interaction.send(self.tmsg)
         elif view.value:
-            await ctx.send("Nuking server...")
-            for channel in ctx.guild.channels:
+            await interaction.send("Nuking channels...")
+            for channel in interaction.guild.channels:
                 try:
                     await channel.delete()
 
-                except BaseException:
-                    await ctx.send(f"Unable to delete {channel.name}!")
+                except nextcord.Forbidden:
+                    await interaction.send(f"Unable to delete {channel.name} due to insufficient permissions!")
         else:
-            await ctx.send("Cancelled.")
+            await interaction.send("Action cancelled successfully.")
 
             
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(administrator=True))
-    @commands.guild_only()
-    async def nuke_roles(self, ctx):
+    @nuke.subcommand()
+    @application_checks.check_any(
+        application_checks.is_owner(),
+        application_checks.has_permissions(administrator=True)
+        )
+    async def roles(
+        self,
+        interaction: nextcord.Interaction
+        ):
         """
         Deletes all roles in guild.
         """
         view = Confirm()
-        await ctx.send(self.rnote)
-        await ctx.send("Are you sure that you want to delete all roles in this guild?", view=view)
+        await interaction.send(f"{self.rnote}\nAre you sure that you want to delete all roles in this guild?", view=view)
         await view.wait()
 
         if view.value is None:
-            await ctx.send(self.tmsg)
+            await interaction.send(self.tmsg)
         elif view.value:
-            await ctx.send("Nuking roles...")
-            for role in ctx.guild.roles:
-                try:
-                    await role.delete()
+            await interaction.send("Nuking roles...")
+            for role in interaction.guild.roles:
+                if role != interaction.guild.default_role:
+                    try:
+                        await role.delete()
 
-                except BaseException:
-                    await ctx.send(f"Unable to delete {role.name}!")
+                    except nextcord.Forbidden:
+                        await interaction.send(f"Unable to delete {role.mention} due to insufficient permissions!")
         else:
-            await ctx.send("Cancelled.")
+            await interaction.send("Action cancelled successfully.")
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(administrator=True))
-    @commands.guild_only()
-    async def nuke_emojis(self, ctx):
+    @nuke.subcommand()
+    @application_checks.check_any(
+        application_checks.is_owner(),
+        application_checks.has_permissions(administrator=True)
+        )
+    async def emojis(
+        self,
+        interaction: nextcord.Interaction
+        ):
         """
         Deletes all emojis in guild.
         """
         view = Confirm()
-        await ctx.send(self.rnote)
-        await ctx.send("Are you sure that you want to delete all emojis in this guild?", view=view)
+        await interaction.send(f"{self.rnote}\nAre you sure that you want to delete all emojis in this guild?", view=view)
         await view.wait()
 
         if view.value is None:
-            await ctx.send(self.tmsg)
+            await interaction.send(self.tmsg)
         elif view.value:
-            await ctx.send("Nuking emojis...")
-            for emoji in ctx.guild.emojis:
+            await interaction.send("Nuking emojis...")
+            for emoji in interaction.guild.emojis:
                 try:
-                    await ctx.guild.delete_emoji(emoji, reason=f"NukeEmojis command issued by {ctx.author.name}")
+                    await emoji.delete(reason="TEst")
 
-                except BaseException:
-                    await ctx.send(f"Unable to delete {emoji}!")
+                except nextcord.Forbidden:
+                    await interaction.send(f"Unable to delete {emoji} due to insufficient permissions!")
         else:
-            await ctx.send("Cancelled.")
+            await interaction.send("Action cancelled successfully.")
 
-#     @commands.command(brief = "Kicks all members in guild", description = "Kicks all members in guild")
-#     @commands.has_permissions(administrator=True)
-#     async def kickall(self, ctx):
-#         for member.member in ctx.guild.fetch_members(limit=None):
-#             try:
-#             await ctx.send(ctx.guild.members)
-            # await ctx.send(ctx.guild.fetch_members(limit=None))
-#                 await ctx.guild.kick(user=member)
-#             except:
-#                 await ctx.send(f"Unable to kick {member}")
+
+    @nuke.subcommand()
+    @application_checks.check_any(
+        application_checks.is_owner(),
+        application_checks.has_permissions(administrator=True)
+        )
+    async def members(
+        self,
+        interaction: nextcord.Interaction
+        ):
+        """
+        Kicks all members in the guild.
+        """
+        view = Confirm()
+        await interaction.send(f"{self.rnote}\nAre you sure that you want to kick all members in this guild?", view=view)
+        await view.wait()
+
+        if view.value is None:
+            await interaction.send(self.tmsg)
+        elif view.value:
+            for member in interaction.guild.members:
+                try:
+                    await interaction.guild.kick(user=member, reason=f"{interaction.user} ({interaction.user.id}) issued nuke members command.")
+                except:
+                    await interaction.send(f"Unable to kick {member} due to insufficient permissions!")
+        else:
+            await interaction.send("Action cancelled successfully.")
 
 
 def setup(bot):
