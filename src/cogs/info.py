@@ -1,7 +1,10 @@
-import nextcord.ext
+import nextcord
 import nextcord.utils
-from nextcord.ext import commands
+from nextcord.ext import commands, application_checks
 from afks import afks
+from nextcord import SlashOption
+
+TESTING_GUILD_ID = 923519688871411732
 
 class Info(commands.Cog):
     """
@@ -11,143 +14,97 @@ class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def ping(self, ctx):
+    @nextcord.slash_command()
+    async def ping(
+        self,
+        interaction: nextcord.Interaction
+        ):
         """
         Get the latency of the bot.
         """
-
-        await ctx.send(f'Pong! {round (self.bot.latency * 1000)} ms')
-
-
-    @commands.command()
-    async def sayhi(self, ctx):
-        """
-        Say hello and tell the prefix.
-        """
-
-        await ctx.send(f"Hello {ctx.author.mention}! My prefix is '-'.")
+        await interaction.send(f'Pong! {round (self.bot.latency * 1000)} ms')
 
 
-    @commands.command()
-    async def userinfo(self, ctx, member: nextcord.Member=None):
+    @nextcord.slash_command()
+    async def userinfo(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True)
+        ):
         """
         Get information about a member.
         """
+        member = member or interaction.user
+        try:
+            created_at = member.created_at.strftime("%d %B %Y, %I:%M %p")
+            joined_at = member.joined_at.strftime("%d %B %Y, %I:%M %p")
+        except:
+            pass
 
-        member = member or ctx.author
         embed = nextcord.Embed(
             title=f"UserInfo of {member}",
-            colour=nextcord.Colour.green())
+            colour=nextcord.Colour.green()
+            )
         embed.set_footer(
-            text=f"Requested by {ctx.author}",
-            icon_url=ctx.author.display_avatar)
-        embed.description = (f"""
-        Avatar: {member.display_avatar.url}
-        Banner: {member.banner}
-        Display Name: {member.display_name}
-        ID: {member.id}
-        Colour: {member.colour}
-        Bot: {member.bot}
-        Discord Representative: {member.system}
-        Created at: {member.created_at}
-        Joined at: {member.joined_at}
-        In Voice: {member.voice}
-        Boosting Since: {member.premium_since}
-        Timeout: {member.timeout}
-        Top Role: {member.top_role}
-        """)
-        await ctx.send(embed=embed)
+            text=f"Requested by {interaction.user}",
+            icon_url=interaction.user.display_avatar
+            )
+        embed.set_image(url=member.display_avatar.url)
+        if member.banner is not None:
+            embed.set_thumbnail(url=member.banner)
+        embed.add_field(name="Colour", value=member.colour)
+        embed.add_field(name="ID", value=member.id)
+        embed.add_field(name="Account Creation Time", value=created_at)
+        embed.add_field(name="Guild Join Time", value=joined_at)
+        embed.add_field(name="Bot", value=member.bot)
+        embed.add_field(name="Discord Representative", value=member.system)
+        embed.add_field(name="Top Role", value=member.top_role.mention)
+        await interaction.send(embed=embed)
 
 
-    @commands.command()
-    async def guildinfo(self, ctx):
+    @nextcord.slash_command()
+    async def guildinfo(self, interaction: nextcord.Interaction):
         """
         Get information about the guild.
         """
-
         humans = 0
         bots = 0
 
-        for human in ctx.guild.humans:
+        for human in interaction.guild.humans:
             humans += 1
 
-        for bot in ctx.guild.bots:
+        for bot in interaction.guild.bots:
             bots += 1
 
         embed = nextcord.Embed(
-            title=f"Guild info of {ctx.guild.name}",
+            title=f"Guild info of {interaction.guild.name}",
             colour=nextcord.Colour.green())
         embed.set_footer(
-            text=f"Requested by {ctx.author}",
-            icon_url=ctx.author.display_avatar)
-        embed.description = (f"""
-                                 Icon: {ctx.guild.icon}
-                                 Banner: {ctx.guild.banner}
-                                 Name: {ctx.guild.name}
-                                 Owner: {ctx.guild.owner}
-                                 Members: {ctx.guild.member_count}
-                                 Humans: {humans}
-                                 Bots: {bots}
-                                 Created At: {ctx.guild.created_at}
-                                 Verification Level: {ctx.guild.verification_level}
-                                 """)
-        await ctx.send(embed=embed)
+            text=f"Requested by {interaction.user}",
+            icon_url=interaction.user.display_avatar.url)
+        embed.set_image(url=interaction.guild.icon.url)
+        if interaction.guild.banner is not None:
+            embed.set_thumbnail(url=interaction.guild.banner)
+        embed.add_field(name="Owner", value=interaction.guild.owner)
+        embed.add_field(name="Members", value=interaction.guild.member_count)
+        embed.add_field(name="Humans", value=humans)
+        embed.add_field(name="Bots", value=bots)
+        embed.add_field(name="Creation Time", value=interaction.guild.created_at.strftime("%d %B %Y, %I:%M %p"))
+        embed.add_field(name="Verification Level", value=interaction.guild.verification_level)
+        await interaction.send(embed=embed)
 
 
-    @commands.command()
-    async def emojiinfo(self, ctx, emoji: nextcord.Emoji):
-        """
-        Get information about a emoji.
-        """
-
-        embed = nextcord.Embed(
-            title=f"Info of {emoji}",
-            colour=nextcord.Colour.green())
-        embed.set_footer(
-            text=f"Requested by {ctx.author}",
-            icon_url=ctx.author.display_avatar)
-        embed.description = (f"""
-                          Name: {emoji.name}
-                          Uploaded by: {emoji.user}
-                          Animated: {emoji.animated}
-                          Managed by Twitch Intergration: {emoji.managed}
-                          URL: {emoji.url}
-                          """)
-        await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def inviteinfo(self, ctx, invite: nextcord.Invite):
-        """
-        Get information about a invite.
-        """
-
-        embed = nextcord.Embed(
-            title=f"Info of {invite}",
-            colour=nextcord.Colour.green())
-        #embed.set_author(name = ctx.bot.user, icon_url = ctx.bot.user.display_avatar)
-        embed.set_footer(
-            text=f"Requested by {ctx.author}",
-            icon_url=ctx.author.display_avatar)
-        embed.description = (f"""
-                             Code: {invite.code}
-                             ID: {invite.id}
-                             Channel: {invite.channel}
-                             Guild: {invite.guild}
-                             Uses: {invite.uses}
-                             Temporary: {invite.temporary}
-                             Expires At: {invite.expires_at}
-                             """)
-        await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def afk(self, ctx, *, reason = "Not provided."):
+    @nextcord.slash_command()
+    async def afk(
+        self,
+        interaction: nextcord.Interaction,
+        *,
+        reason = "Not provided."
+        ):
         """
         Go afk and optionally provide a reason.
         """
-        member = ctx.author
+        member = interaction.user
         if member.id in afks.keys():
             afks.pop(member.id)
         else:
@@ -161,8 +118,8 @@ class Info(commands.Cog):
         embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
         embed.set_thumbnail(url = member.display_avatar)
         embed.add_field(name="AFK Note: ", value=reason)
-        await ctx.send(embed=embed)
-
+        await interaction.send(embed=embed)
+        
 
 def setup(bot):
     bot.add_cog(Info(bot))
