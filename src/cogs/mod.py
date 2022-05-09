@@ -224,16 +224,36 @@ class Mod(commands.Cog):
     async def lock(
         self,
         interaction: nextcord.Interaction,
-        channel: str = SlashOption(required=True)
+        channel: str = SlashOption(required=False)
         ):
         """
         Lock a channel, restrict sending messages permission to @everyone role.
         """
-        channel = nextcord.utils.get(interaction.guild.channels, id=channel) or interaction.channel
+        channel = nextcord.utils.get(interaction.guild.text_channels, name=channel) or interaction.channel
         overwrites = channel.overwrites_for(interaction.guild.default_role)
         overwrites.send_messages = False
         await channel.set_permissions(interaction.guild.default_role, overwrite=overwrites)
         await interaction.send(f'{channel.mention} locked.')
+
+
+    @lock.on_autocomplete("channel")
+    async def lock_autocomplete(
+        self,
+        interaction: nextcord.Interaction,
+        channel: str
+        ):
+        text_channels = []
+        for channel in interaction.guild.text_channels:
+            text_channels.append(channel.name)
+
+        if not channel:
+            await interaction.response.send_autocomplete(text_channels)
+            return
+
+        get_near_channel = [
+        channel for channel in text_channels if channel.lower().startswith(channel.lower())
+        ]
+        await interaction.response.send_autocomplete(get_near_channel)
 
 
     @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
@@ -243,16 +263,36 @@ class Mod(commands.Cog):
     async def unlock(
         self,
         interaction: nextcord.Interaction,
-        channel: str = SlashOption(required=True)
+        channel: str = SlashOption(required=False)
         ):
         """
         Unlock a previously locked channel.
         """
-        channel = nextcord.utils.get(interaction.guild.channels, id=channel) or interaction.channel
+        channel = nextcord.utils.get(interaction.guild.text_channels, name=channel) or interaction.channel
         overwrite = channel.overwrites_for(interaction.guild.default_role)
         overwrite.send_messages = None
         await channel.set_permissions(interaction.guild.default_role, overwrite=overwrite)
         await interaction.send(f'{channel.mention} unlocked.')
+
+
+    @unlock.on_autocomplete("channel")
+    async def snipe_autocomplete(
+        self,
+        interaction: nextcord.Interaction,
+        channel: str
+        ):
+        text_channels = []
+        for channel in interaction.guild.text_channels:
+            text_channels.append(channel.name)
+
+        if not channel:
+            await interaction.response.send_autocomplete(text_channels)
+            return
+
+        get_near_channel = [
+        channel for channel in text_channels if channel.lower().startswith(channel.lower())
+        ]
+        await interaction.response.send_autocomplete(get_near_channel)
 
 
     @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
