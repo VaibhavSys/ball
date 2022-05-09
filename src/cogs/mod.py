@@ -4,7 +4,6 @@ from nextcord.ext import commands, application_checks
 from datetime import timedelta
 from nextcord import SlashOption
 
-TESTING_GUILD_ID = 923519688871411732
 
 class Mod(commands.Cog):
     """
@@ -14,7 +13,7 @@ class Mod(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_roles=True))
     @application_checks.guild_only()
@@ -59,7 +58,7 @@ class Mod(commands.Cog):
         await interaction.send(f"{member} has been removed from {role.name}({role.id}) role by {interaction.user}({interaction.user.id})")
 
 
-    @nextcord.slash_command(description="Timeout a member.", guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command(description="Timeout a member.")
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(moderate_members=True))
     @application_checks.guild_only()
@@ -67,15 +66,24 @@ class Mod(commands.Cog):
         self,
         interaction: nextcord.Interaction,
         member: nextcord.Member = SlashOption(required=True),
-        time: str = "10m",
+        time: str = SlashOption(required=False),
         *,
         reason: str = SlashOption(required=False)
         ):
         """
         Use the discord timeout feature to timeout a member, max time is 1 week.
         """
-        unit = time[-1]
-        time = int(time[:-1])
+        unit = ""
+
+        if not time:
+            time = 10
+        else:
+            unit = time[-1]
+            time = int(time[:-1])
+
+        if unit == "":
+            unit = "m"
+
         if unit == "s" and time < 604800:
             delta = timedelta(seconds=time)
         elif unit == "m" and time < 10080:
@@ -93,7 +101,7 @@ class Mod(commands.Cog):
         await interaction.send(f"{member} has been timed out by {interaction.user}({interaction.user.id}) with reason '{reason}' for {f'{time}{unit}'}.")
 
 
-    @nextcord.slash_command(description="Traditonal mute a member.", guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command(description="Traditonal mute a member.")
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_messages=True))
     @application_checks.guild_only()
@@ -119,7 +127,7 @@ class Mod(commands.Cog):
         await interaction.send(f"{member} has been muted by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(moderate_members=True))
     @application_checks.guild_only()
@@ -136,7 +144,7 @@ class Mod(commands.Cog):
         await member.edit(timeout=None, reason=reason)
         await interaction.send(f"{member} has been removed from timeout by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
-    @nextcord.slash_command(description="Traditonal unmute a member.", guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command(description="Traditonal unmute a member.")
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_messages=True))
     @application_checks.guild_only()
@@ -155,7 +163,7 @@ class Mod(commands.Cog):
         await interaction.send(f"{member} has been unmuted by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @nextcord.slash_command(description="Traditonal unmute a member.", guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command(description="Traditonal unmute a member.")
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(kick_members=True))
     @application_checks.guild_only()
@@ -173,7 +181,7 @@ class Mod(commands.Cog):
         await interaction.send(f"{member}({member.id}) has kicked by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(ban_members=True))
     @application_checks.guild_only()
@@ -191,7 +199,7 @@ class Mod(commands.Cog):
         await interaction.send(f"{member}({member.id}) has been banned by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(ban_members=True))
     @application_checks.guild_only()
@@ -217,7 +225,7 @@ class Mod(commands.Cog):
                 await interaction.send(f"{user.name}#{user.discriminator} has been unbanned by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @nextcord.slash_command(description="Lock a channel.", guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command(description="Lock a channel.")
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_messages=True))
     @application_checks.guild_only()
@@ -256,7 +264,7 @@ class Mod(commands.Cog):
         await interaction.response.send_autocomplete(get_near_channel)
 
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_messages=True))
     @application_checks.guild_only()
@@ -295,7 +303,7 @@ class Mod(commands.Cog):
         await interaction.response.send_autocomplete(get_near_channel)
 
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_messages=True))
     @application_checks.guild_only()
@@ -311,7 +319,7 @@ class Mod(commands.Cog):
         await interaction.send(f"Purged {limit} messages.", delete_after=2)
 
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_messages=True))
     @application_checks.guild_only()
@@ -338,7 +346,7 @@ class Mod(commands.Cog):
         else:
             await interaction.send("Slowmode has been disabled.")
 
-    @nextcord.slash_command(guild_ids=[TESTING_GUILD_ID])
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(manage_nicknames=True))
     @application_checks.guild_only()
