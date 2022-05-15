@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import os
 import logging
+import nextcord
 
 """
 Environment Variables
@@ -94,6 +95,15 @@ def parse_permissions_human(
         permission = str(permission)
         new_permission_list.append(permission_dict[permission])
     return(new_permission_list)
+
+def embed_missing_permissions(
+    embed: nextcord.Embed,
+    missing_permissions: list
+    ):
+    missing_permissions = parse_permissions_human(missing_permissions)
+    for permission in missing_permissions:
+        embed.add_field(name="Missing Permission", value=permission)
+    return(embed)
 
 
 def main():
