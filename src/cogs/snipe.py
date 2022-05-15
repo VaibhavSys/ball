@@ -28,7 +28,8 @@ class Snipe(commands.Cog):
         snipe_message_id[message.channel.id] = None
 
 
-    @nextcord.slash_command(guild_ids=[923519688871411732])
+
+    @nextcord.slash_command()
     async def snipe(
         self,
         interaction: nextcord.Interaction,
