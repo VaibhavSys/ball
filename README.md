@@ -5,6 +5,7 @@ A powerful multipurpose bot which can fulfill most needs.
 - Information
 - Fun
 - Danger
+- Utility
 
 New features are being added constantly!
 
