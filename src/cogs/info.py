@@ -86,7 +86,8 @@ class Info(commands.Cog):
         if interaction.guild.banner is not None:
             embed.set_thumbnail(url=interaction.guild.banner)
         embed.add_field(name="Owner", value=interaction.guild.owner)
-        embed.add_field(name="Members", value=interaction.guild.member_count)
+        embed.add_field(name="ID", value=interaction.guild.id)
+        embed.add_field(name="Total Members", value=interaction.guild.member_count)
         embed.add_field(name="Humans", value=humans)
         embed.add_field(name="Bots", value=bots)
         embed.add_field(name="Creation Time", value=interaction.guild.created_at.strftime("%d %B %Y, %I:%M %p"))
