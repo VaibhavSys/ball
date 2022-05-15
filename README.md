@@ -21,6 +21,7 @@ I use [railway](https://railway.app?referralCode=0TKVQP) (referral) to host this
 - `MONGODB`: The connection URL string for MongoDB (Not used yet, may remove.)
 
 ## Deploying to [railway](https://railway.app?referralCode=0TKVQP) 
+1. Create a [bot account](https://docs.nextcord.dev/en/stable/discord.html)
 1. [Fork](https://github.com/MouseMoosz/ball/fork) this repository
 1. Signup for [railway](https://railway.app?referralCode=0TKVQP)
 1. Create a [new project](https://railway.app/new)
