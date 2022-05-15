@@ -1,0 +1,6 @@
+nextcord
+asyncio
+requests
+flask
+pymongo
+dnspython
