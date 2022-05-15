@@ -1,27 +1,41 @@
-One more multi-pourpose discord bot....\
-This is a multi-pourpose discord bot which serves actual pourpose in your server.\
-You need to host this bot yourself, I host this bot on [replit](https://replit.com/).
+A powerful multipurpose bot which can fulfill most needs.
 
-# Bot Information
-Prefix: **-**\
-Types of commands: Moderation, Fun, Destructive, Info etc.\
-Library Used: [NextCord](https://github.com/nextcord/nextcord)\
-TOKEN Source: Environment variable named "**TOKEN**"\
-API Key for randommer.io: Environment variable named "**RANDOMMER_API**"\
+# Features
+- Moderation
+- Information
+- Fun
+- Danger
+- Utility
 
-# Hosting (Can host on other places too)
-1. Create a [bot account](https://nextcord.readthedocs.io/en/stable/discord.html)
-2. Regiser a account on [replit](https://replit.com/signup)
-3. Fork this repository
-4. Create a new repl (import from your fork on github)
-5. Install the dependencies and setup the secrets or your **.env** file.
-6. Run
+New features are being added constantly!
 
+# Public Bot
+Don't want to self-host it or cannot self-host it?
+Add our [Public Bot](https://discord.com/api/oauth2/authorize?client_id=923535197260087296&permissions=8&scope=bot%20applications.commands)!
 
-**NOTE: Replace the url of the github repository in bot.py with yours**
+# Hosting
+I use [railway](https://railway.app?referralCode=0TKVQP) (referral) to host this bot however, you can host it anywhere.
+
+## Environment Variables
+- `TOKEN`: The bot token
+- `RANDOMMER_API`: The API key for [randommer](https://randommer.io)
+- `MONGODB`: The connection URL string for MongoDB (Not used yet, may remove.)
+
+## Deploying to [railway](https://railway.app?referralCode=0TKVQP) 
+1. Create a [bot account](https://docs.nextcord.dev/en/stable/discord.html)
+1. [Fork](https://github.com/MouseMoosz/ball/fork) this repository
+1. Signup for [railway](https://railway.app?referralCode=0TKVQP)
+1. Create a [new project](https://railway.app/new)
+1. Choose "Deploy from Github repo"
+1. Choose "Configure Github App"
+1. Give it access to the fork
+1. Choose the fork
+1. Set your environment variables
+1. Deploy
+
 # Legal
-This bot is licenced under the GNU AGPL V3 unless otherwise noted.\
-Jotd provided by [jokes.one](https://jokes.one)\
-Avatar by [corneliusventures](https://unsplash.com/@corneliusventures) on [Unsplash](https://unsplash.com/photos/Ak81Vc-kCf4)
+The source code is licenced under the GNU AGPL V3 unless otherwise noted.
+Joke Of The Day provided by https://jokes.one
+Avatar by corneliusventures on Unsplash
 
-  
+
