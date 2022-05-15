@@ -1,7 +1,7 @@
 import nextcord
 import os
 import nextcord.ext
-from nextcord.ext import commands
+from nextcord.ext import commands, application_checks
 import logging
 import _helper as hp
 from os import getenv
@@ -20,10 +20,17 @@ async def on_ready():
     print(f"----------\nLogged in as {bot.user}({bot.user.id}).\n----------")
 
 
+@bot.event
+async def on_application_command_error(interaction: nextcord.Interaction, error):
+    """
+    For hiding traceback
+    """
+    pass
+
+for file in os.listdir("./cogs"):
     """
     Load all cogs in cogs directory.
     """
-for file in os.listdir("./src/cogs"):
     if file.endswith(".py"):
         name = file[:-3]
         cog = f"cogs.{name}"

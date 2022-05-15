@@ -1,5 +1,8 @@
-import nextcord.ext
-from nextcord.ext import commands
+import nextcord
+from nextcord.ext import commands, application_checks
+from nextcord import SlashOption
+
+TESTING_GUILD_ID = 923519688871411732
 
 class ModVC(commands.Cog):
     """
@@ -8,52 +11,84 @@ class ModVC(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(brief="Voice mute a member.")
-    @commands.check_any(commands.is_owner(),
-        commands.has_guild_permissions(mute_members=True))
-    @commands.guild_only()
-    async def vcmute(self, ctx, member: nextcord.Member, *, reason=None):
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_guild_permissions(mute_members=True))
+    @application_checks.guild_only()
+    async def voice(self, interaction: nextcord.Interaction):
         """
-        Voice mute a member so that they cannot talk in a voice channel anymore.
+        Main command for other voice mod subcommands.
         """ 
+        pass
+
+
+    @voice.subcommand()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_guild_permissions(mute_members=True))
+    @application_checks.guild_only()
+    async def mute(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         await member.edit(mute=True, reason=reason)
-        await ctx.reply(f"{member} has been successfully voice-muted by {ctx.author.mention} with reason '{reason}'")
+        await interaction.send(f"{member} has been successfully voice-muted by {interaction.user.mention} with reason '{reason}'")
 
 
-    @commands.command(brief="Voice unmute a member.")
-    @commands.check_any(commands.is_owner(),
-        commands.has_guild_permissions(mute_members=True))
-    @commands.guild_only()
-    async def vcunmute(self, ctx, member: nextcord.Member, *, reason=None):
+    @voice.subcommand()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_guild_permissions(mute_members=True))
+    @application_checks.guild_only()
+    async def unmute(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Voice unmute a member so that they can talk in a voice channel again.
         """
         await member.edit(mute=False, reason=reason)
-        await ctx.reply(f"{member} has been successfully voice-unmuted by {ctx.author.mention} with reason '{reason}'")
+        await interaction.send(f"{member} has been successfully voice-unmuted by {interaction.user.mention} with reason '{reason}'")
 
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(), 
-        commands.has_guild_permissions(deafen_members=True))
-    @commands.guild_only()
-    async def deafen(self, ctx, member: nextcord.Member, reason=None):
+    @voice.subcommand()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_guild_permissions(mute_members=True))
+    @application_checks.guild_only()
+    async def deafen(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Deafen a member so that they cannot hear anything in a voice channel.
         """
         await member.edit(deafen=True, reason=reason)
-        await ctx.reply(f"{ctx.author.mention} has been deafened by {ctx.author.mention} with reason '{reason}.'")
+        await interaction.send(f"{member} has been deafened by {interaction.user.mention} with reason '{reason}.'")
 
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(), 
-        commands.has_guild_permissions(deafen_members=True))
-    @commands.guild_only()
-    async def undeafen(self, ctx, member: nextcord.Member, reason=None):
+    @voice.subcommand()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_guild_permissions(mute_members=True))
+    @application_checks.guild_only()
+    async def undeafen(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Undeafen a member so that they can hear in a voice channel again.
         """
         await member.edit(deafen=False, reason=reason)
-        await ctx.reply(f"{ctx.author.mention} has been undeafened by {ctx.author.mention} with reason '{reason}.'")
+        await interaction.send(f"{member} has been undeafened by {interaction.user.mention} with reason '{reason}.'")
 
 
 def setup(bot):

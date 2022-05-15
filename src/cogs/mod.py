@@ -1,8 +1,8 @@
-import nextcord.ext
+import nextcord
 import nextcord.utils
-from nextcord.ext import commands
+from nextcord.ext import commands, application_checks
 from datetime import timedelta
-
+from nextcord import SlashOption
 
 
 class Mod(commands.Cog):
@@ -13,40 +13,77 @@ class Mod(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_roles=True))
-    @commands.guild_only()
-    async def addrole(self, ctx, member: nextcord.Member, roles: nextcord.Role):
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_roles=True))
+    @application_checks.guild_only()
+    async def role(
+        self,
+        interaction: nextcord.Interaction,
+        ):
         """
-        Add a role to a member.
+        Main command for other role sub-commands.
         """
-        await member.add_roles(roles)
-        await ctx.send(f"{member.mention} has been given role(s) {roles.name}({roles.id}) by {ctx.author.mention}")
+        pass
+        
+
+    @role.subcommand()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_roles=True))
+    @application_checks.guild_only()
+    async def add(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        role: nextcord.Role = SlashOption(required=True)
+        ):
+        await member.add_roles(role)
+        await interaction.send(f"{member} has been given the role {role}({role.id}) by {interaction.user}({interaction.user.id})")
 
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_roles=True))
-    @commands.guild_only()
-    async def rmrole(self, ctx, member: nextcord.Member, roles: nextcord.Role):
+    @role.subcommand()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_roles=True))
+    @application_checks.guild_only()
+    async def remove(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        role: nextcord.Role = SlashOption(required=True)
+        ):
         """
         Remove a role from a member.
         """
-        await member.remove_roles(roles)
-        await ctx.send(f"{member.mention} has been removed from {roles.name}({roles.id}) role(s) by {ctx.author.mention}")
+        await member.remove_roles(role)
+        await interaction.send(f"{member} has been removed from {role.name}({role.id}) role by {interaction.user}({interaction.user.id})")
 
 
-    @commands.command(brief="Timeout a member.")
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_messages=True))
-    @commands.guild_only()
-    async def mute(self, ctx, member: nextcord.Member, time="10m", *, reason=None):
+    @nextcord.slash_command(description="Timeout a member.")
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(moderate_members=True))
+    @application_checks.guild_only()
+    async def timeout(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        time: str = SlashOption(required=False),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Use the discord timeout feature to timeout a member, max time is 1 week.
         """
-        unit = time[-1]
-        time = int(time[:-1])
+        unit = ""
+
+        if not time:
+            time = 10
+        else:
+            unit = time[-1]
+            time = int(time[:-1])
+
+        if unit == "":
+            unit = "m"
+
         if unit == "s" and time < 604800:
             delta = timedelta(seconds=time)
         elif unit == "m" and time < 10080:
@@ -58,88 +95,125 @@ class Mod(commands.Cog):
         elif unit == "w" and time < 1:
             delta = timedelta(weeks=time)
         else:
-            return await ctx.send("Invalid time/unit or time is more than 1 week.")
+            return await interaction.send("Invalid time/unit or time is more than 1 week.")
 
         await member.edit(timeout=delta, reason=reason)
-        await ctx.reply(f"{member.mention} has been timed out by {ctx.author.mention} with reason '{reason}' for {f'{time}{unit}'}.")
+        await interaction.send(f"{member} has been timed out by {interaction.user}({interaction.user.id}) with reason '{reason}' for {f'{time}{unit}'}.")
 
 
-    @commands.command(brief="Traditonal mute a member.")
-    @commands.check_any(commands.is_owner()
-                        or commands.has_permissions(manage_messages=True))
-    @commands.guild_only()
-    async def tmute(self, ctx, member: nextcord.Member, *, reason=None):
+    @nextcord.slash_command(description="Traditonal mute a member.")
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_messages=True))
+    @application_checks.guild_only()
+    async def tmute(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Traditional mute a user by adding a muted role with no permissions to send messages,
         speak in voice channels, react to messages and requesting to join stages.
         """
-        muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
+        muted = nextcord.utils.get(interaction.guild.roles, name="Muted")
 
         if not muted:    
-            muted = await ctx.guild.create_role(name="Muted", reason="Used for muting.")
-            for channel in ctx.guild.channels:
+            muted = await interaction.guild.create_role(name="Muted", reason="Used for muting.")
+            for channel in interaction.guild.channels:
                 await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
 
         await member.add_roles(muted)
-        await ctx.reply(f"{member} has been muted by {ctx.author.mention} with reason '{reason}'")
+        await interaction.send(f"{member} has been muted by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(moderate_members=True))
-    @commands.guild_only()
-    async def unmute(self, ctx, member: nextcord.Member, *, reason=None):
+
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(moderate_members=True))
+    @application_checks.guild_only()
+    async def unmute(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Remove a member from timeout.
         """
         await member.edit(timeout=None, reason=reason)
-        await ctx.reply(f"{member.mention} has been removed from timeout by {ctx.author.mention} with reason '{reason}'.")
+        await interaction.send(f"{member} has been removed from timeout by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
-    @commands.command(brief="Traditonal unmute a member.")
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_messages=True))
-    @commands.guild_only()
-    async def tunmute(self, ctx, member: nextcord.Member, *, reason=None):
+    @nextcord.slash_command(description="Traditonal unmute a member.")
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_messages=True))
+    @application_checks.guild_only()
+    async def tunmute(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Traditional unmute, unmute a member muted by traditional mute.
         """    
-        muted = nextcord.utils.get(ctx.guild.roles, name="Muted")
+        muted = nextcord.utils.get(interaction.guild.roles, name="Muted")
         await member.remove_roles(muted)
-        await ctx.reply(f"{ctx.author.mention} has been unmuted by {ctx.author.mention} with reason '{reason}'")
+        await interaction.send(f"{member} has been unmuted by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(kick_members=True))
-    @commands.guild_only()
-    async def kick(self, ctx, member: nextcord.Member, *, reason=None):
+    @nextcord.slash_command(description="Traditonal unmute a member.")
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(kick_members=True))
+    @application_checks.guild_only()
+    async def kick(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
-        Kick a user from the guild.
+        Kick a member from the guild.
         """
-        await ctx.guild.kick(user=member, reason=reason)
-        await ctx.send(f"User {member}({member.id})) has kicked by {ctx.author.mention} with reason '{reason}''.")
+        await member.kick(reason=reason)
+        await interaction.send(f"{member}({member.id}) has kicked by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(ban_members=True))
-    @commands.guild_only()
-    async def ban(self, ctx, member: nextcord.Member, *, reason=None):
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(ban_members=True))
+    @application_checks.guild_only()
+    async def ban(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Ban a member from the guild.
         """
         await member.ban(reason=reason)
-        await ctx.send(f"{member} has been banned by {ctx.author.mention} with reason '{reason}'.")
+        await interaction.send(f"{member}({member.id}) has been banned by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(ban_members=True))
-    @commands.guild_only()
-    async def unban(self, ctx, *, member, reason=None):
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(ban_members=True))
+    @application_checks.guild_only()
+    async def unban(
+        self,
+        interaction: nextcord.Interaction,
+        member: str = SlashOption(required=True),
+        *,
+        reason: str = SlashOption(required=False)
+        ):
         """
         Unban a previously banned member from the guild.
         """
-        banned_users = await ctx.guild.bans()
+        banned_users = await interaction.guild.bans()
         member_name, member_discriminator = member.split("#")
 
         for ban_entry in banned_users:
@@ -147,88 +221,148 @@ class Mod(commands.Cog):
 
             if (user.name, user.discriminator) == (
                     member_name, member_discriminator):
-                await ctx.guild.unban(user, reason=reason)
-                await ctx.send(f"{user.name}#{user.discriminator} has been unbanned by {ctx.author.mention} with reason '{reason}'")
+                await interaction.guild.unban(user, reason=reason)
+                await interaction.send(f"{user.name}#{user.discriminator} has been unbanned by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @commands.command(brief="Lock a channel.")
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_messages=True))
-    @commands.guild_only()
-    async def lock(self, ctx, channel: nextcord.TextChannel = None):
+    @nextcord.slash_command(description="Lock a channel.")
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_messages=True))
+    @application_checks.guild_only()
+    async def lock(
+        self,
+        interaction: nextcord.Interaction,
+        channel: str = SlashOption(required=False)
+        ):
         """
         Lock a channel, restrict sending messages permission to @everyone role.
         """
-        channel = channel or ctx.channel
-        try:
-            overwrite = channel.overwrites_for(ctx.guild.default_role)
-            overwrite.send_messages = False
-            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
-            await ctx.send('Channel locked.')
-        except nextcord.Forbidden:
-            await ctx.send("I do not have enough permissions to perform this action.")
+        channel = nextcord.utils.get(interaction.guild.text_channels, name=channel) or interaction.channel
+        overwrites = channel.overwrites_for(interaction.guild.default_role)
+        overwrites.send_messages = False
+        await channel.set_permissions(interaction.guild.default_role, overwrite=overwrites)
+        await interaction.send(f'{channel.mention} locked.')
 
 
-    @commands.command(breif="Unlock a channel.")
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_messages=True))
-    @commands.guild_only()
-    async def unlock(self, ctx, channel: nextcord.TextChannel = None):
+    @lock.on_autocomplete("channel")
+    async def lock_autocomplete(
+        self,
+        interaction: nextcord.Interaction,
+        channel: str
+        ):
+        text_channels = []
+        for channel in interaction.guild.text_channels:
+            text_channels.append(channel.name)
+
+        if not channel:
+            await interaction.response.send_autocomplete(text_channels)
+            return
+
+        get_near_channel = [
+        channel for channel in text_channels if channel.lower().startswith(channel.lower())
+        ]
+        await interaction.response.send_autocomplete(get_near_channel)
+
+
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_messages=True))
+    @application_checks.guild_only()
+    async def unlock(
+        self,
+        interaction: nextcord.Interaction,
+        channel: str = SlashOption(required=False)
+        ):
         """
         Unlock a previously locked channel.
         """
-        channel = channel or ctx.channel
-        try:
-            overwrite = channel.overwrites_for(ctx.guild.default_role)
-            overwrite.send_messages = None
-            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
-            await ctx.send('Channel unlocked.')
-        except nextcord.Forbidden:
-            await ctx.send("I do not have enough permissions to perform this action.")
+        channel = nextcord.utils.get(interaction.guild.text_channels, name=channel) or interaction.channel
+        overwrite = channel.overwrites_for(interaction.guild.default_role)
+        overwrite.send_messages = None
+        await channel.set_permissions(interaction.guild.default_role, overwrite=overwrite)
+        await interaction.send(f'{channel.mention} unlocked.')
 
 
-    @commands.command()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_messages=True))
-    @commands.guild_only()
-    async def purge(self, ctx, *, limit: int):
+    @unlock.on_autocomplete("channel")
+    async def snipe_autocomplete(
+        self,
+        interaction: nextcord.Interaction,
+        channel: str
+        ):
+        text_channels = []
+        for channel in interaction.guild.text_channels:
+            text_channels.append(channel.name)
+
+        if not channel:
+            await interaction.response.send_autocomplete(text_channels)
+            return
+
+        get_near_channel = [
+        channel for channel in text_channels if channel.lower().startswith(channel.lower())
+        ]
+        await interaction.response.send_autocomplete(get_near_channel)
+
+
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_messages=True))
+    @application_checks.guild_only()
+    async def purge(
+        self,
+        interaction: nextcord.Interaction,
+        limit: int = SlashOption(required=True)
+        ):
         """
         Delete messages in bulk.
         """
-        await ctx.channel.purge(limit=limit)
-        await ctx.send(f"Purged {limit} messages.", delete_after=2)
+        await interaction.channel.purge(limit=limit)
+        await interaction.send(f"Purged {limit} messages.", delete_after=2)
 
 
-    @commands.command()
-    @commands.guild_only()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_messages=True))
-    async def slowmode(self, ctx, interval: int = 0, unit="s"):
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_messages=True))
+    @application_checks.guild_only()
+    async def slowmode(
+        self,
+        interaction: nextcord.Interaction,
+        interval: int = SlashOption(required=False), 
+        unit: str = SlashOption(required=False)
+        ):
         """Changes channel's slowmode setting.
         Use without parameters to disable.
         """
+        if unit == None:
+            unit = "s"
+
         if unit == "s":
             interval = timedelta(seconds=interval).total_seconds()
         elif unit == "m":
             interval = timedelta(minutes=interval).total_seconds()
 
-        await ctx.channel.edit(slowmode_delay=interval)
+        await interaction.channel.edit(slowmode_delay=interval)
         if interval > 0:
-            await ctx.send(f"Slowmode interval is now {interval}.")
+            await interaction.send(f"Slowmode interval is now {interval}.")
         else:
-            await ctx.send("Slowmode has been disabled.")
+            await interaction.send("Slowmode has been disabled.")
 
-    @commands.command()
-    @commands.guild_only()
-    @commands.check_any(commands.is_owner(),
-        commands.has_permissions(manage_nicknames=True))
-    async def setnick(self, ctx, member: nextcord.Member, *, nick: str):
+    @nextcord.slash_command()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_nicknames=True))
+    @application_checks.guild_only()
+    async def setnick(
+        self,
+        interaction: nextcord.Interaction,
+        member: nextcord.Member = SlashOption(required=True),
+        *,
+        nick: str = SlashOption(required=True)
+        ):
         """
         Change a member's nickname.
         """
         previous_nick = member.display_name
         await member.edit(nick=nick)
-        await ctx.send(f"{ctx.author.mention} changed {member}\'s nickname from \'{previous_nick}\' to '{nick}'. ")
+        await interaction.send(f"{interaction.user}({interaction.user.id}) changed {member}\'s nickname from \'{previous_nick}\' to '{nick}'. ")
 
 
 def setup(bot):

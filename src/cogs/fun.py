@@ -1,12 +1,13 @@
 import nextcord.ext
-from nextcord.ext import commands
+from nextcord.ext import commands, application_checks
 import os
 import json
 import requests
 import random
 import nextcord.utils
+import _helper as hp
+import nextcord
 
-RANDOMMER_API = os.getenv("RANDOMMER_API")
 
 class Fun(commands.Cog):
     """
@@ -16,8 +17,8 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def jotd(self, ctx):
+    @nextcord.slash_command()
+    async def jotd(self, interaction: nextcord.Interaction):
         """
         Get joke of the day using jokes.one API.
         """
@@ -33,25 +34,25 @@ class Fun(commands.Cog):
             title=jokes['joke']['title'],
             colour=nextcord.Colour.green())
         embed.set_footer(
-            text=f"Requested by {ctx.author}",
-            icon_url=ctx.author.display_avatar)
+            text=f"Requested by {interaction.user}",
+            icon_url=interaction.user.display_avatar)
         embed.description = (f"""
         {jokes['joke']['text']}
         ----
         Joke provided by https://jokes.one/
         """)
-        await ctx.send(embed=embed)
+        await interaction.send(embed=embed)
 
 
-    @commands.command()
-    async def rfullname(self, ctx):
+    @nextcord.slash_command()
+    async def rfullname(self, interaction: nextcord.Interaction):
         """
         Get a random fullname using randommer API.
         """
 
         headers = {
             'accept': '*/*',
-            'X-Api-Key': RANDOMMER_API,
+            'X-Api-Key': hp.RANDOMMER_API,
         }
 
         params = (
@@ -63,20 +64,21 @@ class Fun(commands.Cog):
             'https://randommer.io/api/Name',
             headers=headers,
             params=params)
+
         respjson = json.loads(response.text)
         respsend = respjson[0]
-        await ctx.reply(respsend)
+        await interaction.send(respsend)
 
 
-    @commands.command()
-    async def rfirstname(self, ctx):
+    @nextcord.slash_command()
+    async def rfirstname(self, interaction: nextcord.Interaction):
         """
         Get a random firstname using randommer API.
         """
 
         headers = {
             'accept': '*/*',
-            'X-Api-Key': RANDOMMER_API,
+            'X-Api-Key': hp.RANDOMMER_API,
         }
 
         params = (
@@ -88,20 +90,21 @@ class Fun(commands.Cog):
             'https://randommer.io/api/Name',
             headers=headers,
             params=params)
+
         respjson = json.loads(response.text)
         respsend = respjson[0]
-        await ctx.reply(respsend)
+        await interaction.send(respsend)
 
 
-    @commands.command()
-    async def rsurname(self, ctx):
+    @nextcord.slash_command()
+    async def rsurname(self, interaction: nextcord.Interaction):
         """
         Get a random surname using randommer API.
         """
 
         headers = {
             'accept': '*/*',
-            'X-Api-Key': RANDOMMER_API,
+            'X-Api-Key': hp.RANDOMMER_API,
         }
 
         params = (
@@ -113,9 +116,42 @@ class Fun(commands.Cog):
             'https://randommer.io/api/Name',
             headers=headers,
             params=params)
+
         respjson = json.loads(response.text)
         respsend = respjson[0]
-        await ctx.reply(respsend)
+        await interaction.send(respsend)
+
+
+    @nextcord.slash_command()
+    @application_checks.guild_only()
+    @application_checks.check_any(application_checks.is_owner(),
+        application_checks.has_permissions(manage_messages=True))
+    async def someone(self, interaction: nextcord.Interaction):
+        """
+        Setup a role named 'someone' which randomly pings a human member.
+        """
+        role = nextcord.utils.get(interaction.guild.roles, name="someone")
+        if not role:
+            role = await interaction.guild.create_role(name="someone", reason="Ping someone!")
+            random_member = random.choice(interaction.guild.humans)
+            await random_member.add_roles(role)
+            await interaction.send(f"{role.mention} setup successful! You can now ping {role.mention} to ping a random human.")
+            return 0
+        return await interaction.send(f"{role.mention} is already settled up!")
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.check_any(commands.is_owner(),
+        commands.has_permissions(manage_messages=True))
+    async def someone(self, ctx):
+        role = nextcord.utils.get(ctx.guild.roles, name="someone")
+        if not role:
+            role = await ctx.guild.create_role(name="someone", reason="Ping someone!")
+            random_member = random.choice(ctx.guild.humans)
+            await random_member.add_roles(role)
+            await ctx.send("@someone setup successful! You can now ping @someone to ping a random human.")
+            return 0
+        return await ctx.send("@someone is already settled up!")
 
     @commands.command()
     @commands.guild_only()
