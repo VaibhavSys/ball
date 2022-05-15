@@ -40,7 +40,7 @@ def warn_count(idict: dict, id: int):
         return(count)
     except KeyError:
         return(0)
-
+      
       
 permission_dict = {
     "create_instant_invite": "Create Instant Invite",
@@ -102,3 +102,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    

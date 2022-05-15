@@ -75,7 +75,6 @@ class Errors(commands.Cog):
                 embed.add_field(name="Missing Permission", value=permission)
             await interaction.send(embed=embed)
 
-
         else:
             await interaction.send(f"An unexpected error has occurred, please report it to the developer.\nError:\n```py\n{error}\n```")
             raise(error)

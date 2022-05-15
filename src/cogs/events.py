@@ -29,7 +29,6 @@ class Events(commands.Cog):
         muted = nextcord.utils.get(channel.guild.roles, name="Muted")
         if not muted: # If the muted role doesn't exist, return.
             return
-
         await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
 
 

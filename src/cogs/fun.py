@@ -153,6 +153,20 @@ class Fun(commands.Cog):
             return 0
         return await ctx.send("@someone is already settled up!")
 
+    @commands.command()
+    @commands.guild_only()
+    @commands.check_any(commands.is_owner(),
+        commands.has_permissions(manage_messages=True))
+    async def someone(self, ctx):
+        role = nextcord.utils.get(ctx.guild.roles, name="someone")
+        if not role:
+            role = await ctx.guild.create_role(name="someone", reason="Ping someone!")
+            random_member = random.choice(ctx.guild.humans)
+            await random_member.add_roles(role)
+            await ctx.send("@someone setup successful! You can now ping @someone to ping a random human.")
+            return 0
+        return await ctx.send("@someone is already settled up!")
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
