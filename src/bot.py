@@ -27,7 +27,7 @@ async def on_application_command_error(interaction: nextcord.Interaction, error)
     """
     pass
 
-for file in os.listdir("./src/cogs"):
+for file in os.listdir("./cogs"):
     """
     Load all cogs in cogs directory.
     """

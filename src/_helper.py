@@ -41,7 +41,7 @@ def warn_count(idict: dict, id: int):
     except KeyError:
         return(0)
 
-
+      
 permission_dict = {
     "create_instant_invite": "Create Instant Invite",
     "kick_members": "Kick Members",

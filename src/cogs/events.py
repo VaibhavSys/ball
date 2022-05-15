@@ -69,6 +69,6 @@ class Events(commands.Cog):
             hp.logger.info(f"{someone} now has the someone role.")
             await someone.add_roles(role)
 
-
+            
 def setup(bot):
     bot.add_cog(Events(bot))
