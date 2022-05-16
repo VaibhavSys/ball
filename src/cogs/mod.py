@@ -163,7 +163,7 @@ class Mod(commands.Cog):
         await interaction.send(f"{member} has been unmuted by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
 
 
-    @nextcord.slash_command(description="Traditonal unmute a member.")
+    @nextcord.slash_command()
     @application_checks.check_any(application_checks.is_owner(),
         application_checks.has_permissions(kick_members=True))
     @application_checks.guild_only()
