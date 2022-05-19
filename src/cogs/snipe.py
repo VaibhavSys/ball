@@ -14,7 +14,10 @@ class Snipe(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_message_delete(self, message):
+    async def on_message_delete(
+            self,
+            message
+            ):
         global snipe_message_author
         global snipe_message_content
         global snipe_message_id
