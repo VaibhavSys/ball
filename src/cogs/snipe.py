@@ -14,7 +14,10 @@ class Snipe(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_message_delete(self, message):
+    async def on_message_delete(
+            self,
+            message
+            ):
         global snipe_message_author
         global snipe_message_content
         global snipe_message_id
@@ -51,7 +54,7 @@ class Snipe(commands.Cog):
             embed.set_footer(text=f"Requested by {interaction.user}", icon_url=interaction.user.display_avatar.url)
             await interaction.send(embed=embed)
 
-        except KeyError:
+        except:
             embed = nextcord.Embed(title="Ran out of bullets.", colour=nextcord.Colour.blue())
             embed.description = f"No message recently deleted found in {channel}."
             embed.set_footer(text=f"Requested by {interaction.user}", icon_url=interaction.user.display_avatar.url)
