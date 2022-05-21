@@ -1,19 +1,18 @@
-import nextcord.ext
-from nextcord.ext import commands, application_checks
 import os
 import json
 import requests
 import random
+import nextcord
+from nextcord.ext import commands, application_checks
 import nextcord.utils
 import _helper as hp
-import nextcord
 
 
 class Fun(commands.Cog):
     """
     Have some fun!
     """
-    
+
     def __init__(self, bot):
         self.bot = bot
 

@@ -1,8 +1,7 @@
 import nextcord
-import nextcord.ext
-import nextcord.utils
-from nextcord.ext import commands, application_checks
 from nextcord import Interaction
+from nextcord.ext import commands, application_checks
+import nextcord.utils
 
 
 class Confirm(nextcord.ui.View):
@@ -82,7 +81,7 @@ class Danger(commands.Cog):
         else:
             await interaction.send("Action cancelled successfully.")
 
-            
+
     @nuke.subcommand()
     @application_checks.check_any(
         application_checks.is_owner(),

@@ -1,10 +1,8 @@
-import nextcord.ext
-import nextcord.utils
-from nextcord.ext import commands
-from afks import afks
-import nextcord.utils
 import random
+from nextcord.ext import commands
+import nextcord.utils
 import _helper as hp
+from afks import afks
 
 class Events(commands.Cog):
     def __init__(self, bot):
@@ -14,7 +12,7 @@ class Events(commands.Cog):
         """
         For AFK command, removes the AFK from name and returns the previous nickname of member
         """
-        
+
         if "(AFK)" in name.split():
             return " ".join(name.split()[1:])
 
@@ -68,6 +66,6 @@ class Events(commands.Cog):
             hp.logger.info(f"{someone} now has the someone role.")
             await someone.add_roles(role)
 
-            
+
 def setup(bot):
     bot.add_cog(Events(bot))

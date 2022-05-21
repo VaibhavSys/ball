@@ -27,7 +27,7 @@ logger.addHandler(handler)
 
 
 """
-MongoDB 
+MongoDB
 """
 Client = MongoClient(MONGODB)
 
@@ -41,7 +41,7 @@ def warn_count(idict: dict, id: int):
     except KeyError:
         return(0)
 
-      
+
 permission_dict = {
     "create_instant_invite": "Create Instant Invite",
     "kick_members": "Kick Members",
@@ -95,7 +95,7 @@ def parse_permissions_human(
         permission = str(permission)
         new_permission_list.append(permission_dict[permission])
     return(new_permission_list)
-    
+
 
 def main():
     pass

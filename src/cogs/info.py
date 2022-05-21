@@ -1,10 +1,9 @@
 import nextcord
-import nextcord.utils
-from nextcord.ext import commands, application_checks
-from afks import afks
 from nextcord import SlashOption
+from nextcord.ext import commands, application_checks
+import nextcord.utils
+from afks import afks
 
-TESTING_GUILD_ID = 923519688871411732
 
 class Info(commands.Cog):
     """
@@ -114,13 +113,13 @@ class Info(commands.Cog):
 
             except:
                 pass
-              
+
         afks[member.id] = reason
         embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
         embed.set_thumbnail(url = member.display_avatar)
         embed.add_field(name="AFK Note: ", value=reason)
         await interaction.send(embed=embed)
-        
+
 
 def setup(bot):
     bot.add_cog(Info(bot))
