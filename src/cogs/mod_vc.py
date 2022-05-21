@@ -1,8 +1,7 @@
 import nextcord
-from nextcord.ext import commands, application_checks
 from nextcord import SlashOption
+from nextcord.ext import commands, application_checks
 
-TESTING_GUILD_ID = 923519688871411732
 
 class ModVC(commands.Cog):
     """
