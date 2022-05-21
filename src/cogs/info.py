@@ -1,10 +1,9 @@
 import nextcord
-import nextcord.utils
-from nextcord.ext import commands, application_checks
-from afks import afks
 from nextcord import SlashOption
+from nextcord.ext import commands, application_checks
+import nextcord.utils
+from afks import afks
 
-TESTING_GUILD_ID = 923519688871411732
 
 class Info(commands.Cog):
     """

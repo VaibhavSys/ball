@@ -1,10 +1,8 @@
-import nextcord.ext
-import nextcord.utils
-from nextcord.ext import commands
-from afks import afks
-import nextcord.utils
 import random
+from nextcord.ext import commands
+import nextcord.utils
 import _helper as hp
+from afks import afks
 
 class Events(commands.Cog):
     def __init__(self, bot):

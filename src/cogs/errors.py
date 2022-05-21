@@ -1,5 +1,4 @@
 import nextcord
-import nextcord.ext
 from nextcord.ext import commands, application_checks
 import _helper as hp
 
