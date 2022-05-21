@@ -1,10 +1,10 @@
-import nextcord
 import os
+import logging
+import nextcord
 import nextcord.ext
 from nextcord.ext import commands, application_checks
-import logging
 import _helper as hp
-from os import getenv
+
 
 intents = nextcord.Intents.default()
 intents.members = True
@@ -12,9 +12,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), intents=inten
 cogs = []
 
 
-"""
-Events
-"""
+# Events
 @bot.event
 async def on_ready():
     print(f"----------\nLogged in as {bot.user}({bot.user.id}).\n----------")
@@ -26,6 +24,7 @@ async def on_application_command_error(interaction: nextcord.Interaction, error)
     For hiding traceback
     """
     pass
+    
 
 for file in os.listdir("./src/cogs"):
     """
@@ -39,4 +38,4 @@ for file in os.listdir("./src/cogs"):
         print(f"Loaded cog {name}.")
 
 
-bot.run(getenv("TOKEN"))
+bot.run(os.getenv("TOKEN"))
