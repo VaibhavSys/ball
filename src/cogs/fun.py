@@ -13,7 +13,7 @@ class Fun(commands.Cog):
     """
     Have some fun!
     """
-    
+
     def __init__(self, bot):
         self.bot = bot
 

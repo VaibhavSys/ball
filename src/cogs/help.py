@@ -23,7 +23,7 @@ class HelpCommand(commands.HelpCommand):
     async def send_cog_help(self, cog):
         """
         Send the help for a specific cog.
-        """ 
+        """
         embed = nextcord.Embed(
             title=f"**{cog.qualified_name}** Commands",
              colour=nextcord.Colour.blue()

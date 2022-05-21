@@ -25,7 +25,7 @@ class Mod(commands.Cog):
         Main command for other role sub-commands.
         """
         pass
-        
+
 
     @role.subcommand()
     @application_checks.check_any(application_checks.is_owner(),
@@ -118,7 +118,7 @@ class Mod(commands.Cog):
         """
         muted = nextcord.utils.get(interaction.guild.roles, name="Muted")
 
-        if not muted:    
+        if not muted:
             muted = await interaction.guild.create_role(name="Muted", reason="Used for muting.")
             for channel in interaction.guild.channels:
                 await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
@@ -157,7 +157,7 @@ class Mod(commands.Cog):
         ):
         """
         Traditional unmute, unmute a member muted by traditional mute.
-        """    
+        """
         muted = nextcord.utils.get(interaction.guild.roles, name="Muted")
         await member.remove_roles(muted)
         await interaction.send(f"{member} has been unmuted by {interaction.user}({interaction.user.id}) with reason '{reason}'.")
@@ -326,7 +326,7 @@ class Mod(commands.Cog):
     async def slowmode(
         self,
         interaction: nextcord.Interaction,
-        interval: int = SlashOption(required=False), 
+        interval: int = SlashOption(required=False),
         unit: str = SlashOption(required=False)
         ):
         """Changes channel's slowmode setting.

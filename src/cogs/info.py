@@ -114,13 +114,13 @@ class Info(commands.Cog):
 
             except:
                 pass
-              
+
         afks[member.id] = reason
         embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
         embed.set_thumbnail(url = member.display_avatar)
         embed.add_field(name="AFK Note: ", value=reason)
         await interaction.send(embed=embed)
-        
+
 
 def setup(bot):
     bot.add_cog(Info(bot))

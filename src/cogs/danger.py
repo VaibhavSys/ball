@@ -82,7 +82,7 @@ class Danger(commands.Cog):
         else:
             await interaction.send("Action cancelled successfully.")
 
-            
+
     @nuke.subcommand()
     @application_checks.check_any(
         application_checks.is_owner(),

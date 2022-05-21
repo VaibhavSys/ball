@@ -14,7 +14,7 @@ class Events(commands.Cog):
         """
         For AFK command, removes the AFK from name and returns the previous nickname of member
         """
-        
+
         if "(AFK)" in name.split():
             return " ".join(name.split()[1:])
 
@@ -68,6 +68,6 @@ class Events(commands.Cog):
             hp.logger.info(f"{someone} now has the someone role.")
             await someone.add_roles(role)
 
-            
+
 def setup(bot):
     bot.add_cog(Events(bot))
