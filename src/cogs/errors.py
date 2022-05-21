@@ -41,7 +41,7 @@ class Errors(commands.Cog):
                 for error in missing_permissions_errors:
                     missing_permissions.append(error.missing_permissions[0])
                 missing_permissions = hp.parse_permissions_human(missing_permissions)
-            
+
             if len(missing_permissions_errors) > 0:
                 for error in missing_role_errors:
                     missing_roles.append(error.missing_role)
@@ -74,7 +74,7 @@ class Errors(commands.Cog):
             for permission in hp.parse_permissions_human(error.missing_permissions):
                 embed.add_field(name="Missing Permission", value=permission)
             await interaction.send(embed=embed)
-            
+
         else:
             await interaction.send(f"An unexpected error has occurred, please report it to the developer.\nError:\n```py\n{error}\n```")
             raise(error)
