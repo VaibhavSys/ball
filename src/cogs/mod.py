@@ -332,7 +332,7 @@ class Mod(commands.Cog):
         """Changes channel's slowmode setting.
         Use without parameters to disable.
         """
-        if unit == None:
+        if unit is None:
             unit = "s"
 
         if unit == "s":
