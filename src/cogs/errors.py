@@ -29,9 +29,9 @@ class Errors(commands.Cog):
             missing_roles = []
 
             for error in errors:
-                if type(error) == application_checks.errors.ApplicationMissingPermissions:
+                if isinstance(error, application_checks.errors.ApplicationMissingPermissions):
                     missing_permissions_errors.append(error)
-                elif type(error) == application_checks.errors.ApplicationMissingRole:
+                elif isinstance(error, application_checks.errors.ApplicationMissingRole):
                     missing_role_errors.append(error)
 
             embed = nextcord.Embed(title="Missing Requirements", colour=nextcord.Colour.red())
