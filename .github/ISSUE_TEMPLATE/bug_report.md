@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report a bug
 title: "[BUG]"
 labels: ''
 assignees: ''
@@ -20,8 +20,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Bot Information**
-- Permissions the bot has
-- Bot role position
+- Bot Permissions
+- Bot Position in Role Hierarchy
 
 **Additional context**
 Add any other context about the problem here.
