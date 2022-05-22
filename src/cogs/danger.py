@@ -75,6 +75,7 @@ class Danger(commands.Cog):
             for channel in interaction.guild.channels:
                 try:
                     await channel.delete()
+                    await asyncio.sleep(2)
 
                 except nextcord.Forbidden:
                     await interaction.send(f"Unable to delete {channel.name} due to insufficient permissions!")
@@ -106,6 +107,7 @@ class Danger(commands.Cog):
                 if role != interaction.guild.default_role:
                     try:
                         await role.delete()
+                        await asyncio.sleep(2)
 
                     except nextcord.Forbidden:
                         await interaction.send(f"Unable to delete {role.mention} due to insufficient permissions!")
@@ -134,7 +136,8 @@ class Danger(commands.Cog):
             await interaction.send("Nuking emojis...")
             for emoji in interaction.guild.emojis:
                 try:
-                    await emoji.delete(reason="TEst")
+                    await emoji.delete()
+                    await asyncio.sleep(2)
 
                 except nextcord.Forbidden:
                     await interaction.send(f"Unable to delete {emoji} due to insufficient permissions!")
@@ -164,6 +167,8 @@ class Danger(commands.Cog):
             for member in interaction.guild.members:
                 try:
                     await interaction.guild.kick(user=member, reason=f"{interaction.user} ({interaction.user.id}) issued nuke members command.")
+                    await asyncio.sleep(2)
+                    
                 except:
                     await interaction.send(f"Unable to kick {member} due to insufficient permissions!")
         else:
