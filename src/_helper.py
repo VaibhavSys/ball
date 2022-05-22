@@ -1,7 +1,9 @@
-from pymongo import MongoClient
 import os
+import json
 import logging
+import aiohttp
 import nextcord
+from pymongo import MongoClient
 
 """
 Environment Variables
@@ -95,6 +97,27 @@ def parse_permissions_human(
         permission = str(permission)
         new_permission_list.append(permission_dict[permission])
     return(new_permission_list)
+
+async def request_randommer_name(
+    name_type: str
+    ):
+    """
+    Makes a request to randommer.io to get a random name.
+    """
+    headers = {
+        'accept': '*/*',
+        'X-Api-Key': RANDOMMER_API,
+        }
+
+    params = (
+        ('nameType', name_type),
+        ('quantity', 1),
+        )
+
+    async with aiohttp.ClientSession() as session:
+            async with session.get("https://randommer.io/api/Name", headers=headers, params=params) as response:
+                response_json = json.loads(await response.text())
+                return response_json[0]
 
 
 def main():

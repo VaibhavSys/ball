@@ -1,6 +1,7 @@
 nextcord
 asyncio
-requests
-flask
 pymongo
 dnspython
+aiohttp
+aiodns
+cchardet
