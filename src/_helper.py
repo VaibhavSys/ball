@@ -3,7 +3,6 @@ import json
 import logging
 import aiohttp
 import nextcord
-from pymongo import MongoClient
 
 """
 Environment Variables
