@@ -9,7 +9,12 @@ Environment Variables
 """
 TOKEN = os.getenv("TOKEN")
 RANDOMMER_API = os.getenv("RANDOMMER_API")
-
+POSTGRESQL = {
+    "host": os.getenv("POSTGRESQL_HOST"),
+    "database": os.getenv("POSTGRESQL_DATABASE"),
+    "user": os.getenv("POSTGRESQL_USER"),
+    "password": os.getenv("POSTGRESQL_PASSWORD")
+}
 """
 Logging setup.
 """

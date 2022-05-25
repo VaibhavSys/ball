@@ -1,14 +1,25 @@
 import os
 import logging
+import psycopg2
 import nextcord
 import nextcord.ext
 from nextcord.ext import commands, application_checks
+import db
 import _helper as hp
-
 
 intents = nextcord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), intents=intents)
+bot.db = db
+def create_connection():
+    connection = psycopg2.connect(
+    host="127.0.0.1",
+    database="postgres",
+    user="postgres",
+    password="password"
+    )
+    return connection
+bot.create_connection = create_connection
 cogs = []
 
 
