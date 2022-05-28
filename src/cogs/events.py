@@ -30,7 +30,6 @@ class Events(commands.Cog):
             return
         await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
 
-
     @commands.Cog.listener(name="on_message")
     async def afk_listener(self, message):
         """
@@ -53,7 +52,6 @@ class Events(commands.Cog):
             member = nextcord.utils.get(message.guild.members, id=id)
             if (message.reference and member == (await message.channel.fetch_message(message.reference.message_id)).author) or member in message.mentions:
                 await message.reply(f"{member} is AFK: {reason}")
-
 
     @commands.Cog.listener(name="on_message")
     async def someone_listener(self, message):
