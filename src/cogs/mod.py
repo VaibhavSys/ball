@@ -41,6 +41,16 @@ class Mod(commands.Cog):
         member: nextcord.Member = SlashOption(required=True),
         role: nextcord.Role = SlashOption(required=True)
     ):
+        """
+        Add a role to a member.
+        """
+        if (interaction.user.top_role < role):
+            return await interaction.send(f"{role.name} is higher than you in role hierarchy.")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+        elif (interaction.user.top_role > role) is False:
+            return await interaction.send(f"Your top role is lower than {role.name}.")
+
         await member.add_roles(role)
         await interaction.send(f"{member} has been given the role \'{role.name}\'.")
 
@@ -59,6 +69,13 @@ class Mod(commands.Cog):
         """
         Remove a role from a member.
         """
+        if (interaction.user.top_role < role):
+            return await interaction.send(f"{role.name} is higher than you in role hierarchy.")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+        elif (interaction.user.top_role > role) is False:
+            return await interaction.send(f"Your top role is lower than {role.name}.")
+
         await member.remove_roles(role)
         await interaction.send(f"{member} has been removed from role \'{role.name}\'")
 
@@ -78,6 +95,15 @@ class Mod(commands.Cog):
         """
         Use the discord timeout feature to timeout a member, max time is 1 week.
         """
+        if (interaction.user == member):
+            return await interaction.send("You cannot issue yourself a mute.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot issue the guild owner a mute.")
+        elif interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         unit = ""
 
         if not time:
@@ -121,6 +147,15 @@ class Mod(commands.Cog):
         Traditional mute a user by adding a muted role with no permissions to send messages,
         speak in voice channels, react to messages and requesting to join stages.
         """
+        if (interaction.user == member):
+            return await interaction.send("You cannot issue yourself a mute.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot issue the guild owner a mute.")
+        elif interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+        
         muted = nextcord.utils.get(interaction.guild.roles, name="Muted")
         if not muted:
             muted = await interaction.guild.create_role(
@@ -154,6 +189,15 @@ class Mod(commands.Cog):
         """
         Remove a member from timeout.
         """
+        if (interaction.user == member):
+            return await interaction.send("You cannot unmute yourself.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot issue the guild owner a unmute.")
+        elif interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         await member.edit(timeout=None, reason=reason)
         await interaction.send(f"{member} has been removed from timeout with reason \'{reason}\'.")
 
@@ -172,6 +216,15 @@ class Mod(commands.Cog):
         """
         Traditional unmute, unmute a member muted by traditional mute.
         """
+        if (interaction.user == member):
+            return await interaction.send("You cannot unmute yourself.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot issue the guild owner a unmute.")
+        elif interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         muted = nextcord.utils.get(interaction.guild.roles, name="Muted")
         await member.remove_roles(muted)
         await interaction.send(f"{member} has been unmuted with reason \'{reason}\'.")
@@ -191,6 +244,15 @@ class Mod(commands.Cog):
         """
         Kick a member from the guild.
         """
+        if interaction.user == member:
+            return await interaction.send("You cannot issue yourself a kick.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot issue the guild owner a kick.")
+        elif interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         await member.kick(reason=reason)
         await interaction.send(f"{member}({member.id}) has kicked with reason '{reason}'.")
 
@@ -209,6 +271,15 @@ class Mod(commands.Cog):
         """
         Ban a member from the guild.
         """
+        if interaction.user == member:
+            return await interaction.send("You cannot issue yourself a ban.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot issue the guild owner a ban.")
+        elif interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         await member.ban(reason=reason)
         await interaction.send(f"{member} ({member.id}) has been banned with reason \'{reason}\'.")
 
@@ -303,7 +374,7 @@ class Mod(commands.Cog):
         await interaction.send(f'{channel.mention} unlocked.')
 
     @unlock.on_autocomplete("channel")
-    async def snipe_autocomplete(
+    async def unlock_autocomplete(
         self,
         interaction: nextcord.Interaction,
         channel: str
@@ -384,6 +455,13 @@ class Mod(commands.Cog):
         """
         Change a member's nickname.
         """
+        if interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot change the nickname for the guild owner.")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         previous_nick = member.display_name
         await member.edit(nick=nick)
         await interaction.send(f"{interaction.user}({interaction.user.id}) changed {member}\'s nickname from \'{previous_nick}\' to '{nick}'. ")
@@ -418,6 +496,15 @@ class Mod(commands.Cog):
         """
         Add a warning to a member in the guild.
         """
+        if interaction.user == member:
+            return await interaction.send("You cannot issue yourself a warning.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot issue the guild owner a warning.")
+        elif interaction.user.top_role == member.top_role:
+            return await interaction.send(f"You are equal to {member} in role hierarchy")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         await interaction.response.defer()
         cursor = self.bot.create_connection().cursor()
         warn_id = self.bot.db.add_warn(
@@ -455,6 +542,19 @@ class Mod(commands.Cog):
         """
         await interaction.response.defer()
         cursor = self.bot.create_connection().cursor()
+        cursor.execute(f"SELECT user_id FROM warns WHERE warn_id = {warn_id};")
+        member_id = cursor.fetchone()
+        member = nextcord.utils.get(interaction.guild.members, id=member_id)
+
+        if (interaction.user == member):
+            return await interaction.send("You cannot remove a warning from yourself.")
+        elif (interaction.guild.owner == member):
+            return await interaction.send("You cannot remove a warning from the guild owner..")
+        elif (interaction.user.top_role == member.top_role):
+            return await interaction.send(f"You are equal to {member} in role hierarchy.")
+        elif (interaction.user.top_role > member.top_role) is False:
+            return await interaction.send(f"You are lower than {member} in role hierarchy.")
+
         remove_warn = self.bot.db.remove_warn(
             cursor, warn_id, interaction.guild.id
             )
