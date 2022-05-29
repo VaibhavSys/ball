@@ -2,7 +2,7 @@
 
 ## Adding our Public Bot
 Don't want to host it yourself? We got you covered!
-You can add our [public bot](https://discord.com/api/oauth2/authorize?client_id=923535197260087296&permissions=1644971949559&scope=bot%20applications.commands) and relax.
+You can add our [public bot][1] and relax.
 
 ### Step-by-step instruction
 1. Click [here][1].
