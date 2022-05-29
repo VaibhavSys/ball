@@ -4,6 +4,7 @@ import nextcord.utils
 import _helper as hp
 from afks import afks
 
+
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -25,16 +26,18 @@ class Events(commands.Cog):
         """
 
         muted = nextcord.utils.get(channel.guild.roles, name="Muted")
-        if not muted: # If the muted role doesn't exist, return.
+        if not muted:  # If the muted role doesn't exist, return.
             return
         await channel.set_permissions(muted, send_messages=False, speak=False, request_to_speak=False, add_reactions=False)
-
 
     @commands.Cog.listener(name="on_message")
     async def afk_listener(self, message):
         """
         When a AFK member sends a message, remove them from AFK and remove '(AFK)' from their name.
         """
+        if message.guild is None:
+            return
+
         if message.author.id in afks.keys():
             afks.pop(message.author.id)
             try:
@@ -46,10 +49,9 @@ class Events(commands.Cog):
             await message.channel.send(f"Welcome back {message.author.mention}, I removed your AFK.")
 
         for id, reason in afks.items():
-            member = nextcord.utils.get(message.guild.members, id = id)
+            member = nextcord.utils.get(message.guild.members, id=id)
             if (message.reference and member == (await message.channel.fetch_message(message.reference.message_id)).author) or member in message.mentions:
                 await message.reply(f"{member} is AFK: {reason}")
-
 
     @commands.Cog.listener(name="on_message")
     async def someone_listener(self, message):
@@ -57,8 +59,11 @@ class Events(commands.Cog):
         When a member pings 'someone' role, all members from that role are removed and a random human member
         is assigned that role.
         """
+        if message.guild is None:
+            return
+
         role = nextcord.utils.get(message.guild.roles, name="someone")
-        if role in message.role_mentions and message.author.bot == False:
+        if role in message.role_mentions and message.author.bot is False:
             for member in role.members:
                 await member.remove_roles(role)
                 hp.logger.info(f"{member} no longer has the someone role.")

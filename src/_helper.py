@@ -3,15 +3,18 @@ import json
 import logging
 import aiohttp
 import nextcord
-from pymongo import MongoClient
 
 """
 Environment Variables
 """
 TOKEN = os.getenv("TOKEN")
 RANDOMMER_API = os.getenv("RANDOMMER_API")
-MONGODB = os.getenv("MONGODB")
-
+POSTGRESQL = {
+    "host": os.getenv("POSTGRESQL_HOST"),
+    "database": os.getenv("POSTGRESQL_DATABASE"),
+    "user": os.getenv("POSTGRESQL_USER"),
+    "password": os.getenv("POSTGRESQL_PASSWORD")
+}
 """
 Logging setup.
 """
@@ -25,23 +28,6 @@ handler.setFormatter(
     logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s')
 )
 logger.addHandler(handler)
-
-
-
-"""
-MongoDB
-"""
-Client = MongoClient(MONGODB)
-
-def warn_count(idict: dict, id: int):
-    try:
-        count = 0
-        print(idict)
-        for i in idict[id]:
-            count += 1
-        return(count)
-    except KeyError:
-        return(0)
 
 
 permission_dict = {

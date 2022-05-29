@@ -17,29 +17,26 @@ class Info(commands.Cog):
     async def ping(
         self,
         interaction: nextcord.Interaction
-        ):
+    ):
         """
         Get the latency of the bot.
         """
         await interaction.send(f'Pong! {round (self.bot.latency * 1000)} ms')
 
-
     @nextcord.slash_command()
+    @application_checks.guild_only()
     async def userinfo(
         self,
         interaction: nextcord.Interaction,
         member: nextcord.Member = SlashOption(required=True)
-        ):
+    ):
         """
         Get information about a member.
         """
         member = member or interaction.user
-        try:
-            created_at = member.created_at.strftime("%d %B %Y, %I:%M %p")
-            joined_at = member.joined_at.strftime("%d %B %Y, %I:%M %p")
-        except:
-            pass
-
+        joined_at = member.joined_at.strftime("%d %B %Y, %I:%M %p")
+        created_at = member.created_at.strftime("%d %B %Y, %I:%M %p")
+        
         embed = nextcord.Embed(
             title=f"UserInfo of {member}",
             colour=nextcord.Colour.green()
@@ -59,7 +56,6 @@ class Info(commands.Cog):
         embed.add_field(name="Discord Representative", value=member.system)
         embed.add_field(name="Top Role", value=member.top_role.mention)
         await interaction.send(embed=embed)
-
 
     @nextcord.slash_command()
     async def guildinfo(self, interaction: nextcord.Interaction):
@@ -81,7 +77,9 @@ class Info(commands.Cog):
         embed.set_footer(
             text=f"Requested by {interaction.user}",
             icon_url=interaction.user.display_avatar.url)
-        embed.set_image(url=interaction.guild.icon.url)
+        if interaction.guild.icon is not None:
+
+            embed.set_image(url=interaction.guild.icon.url)
         if interaction.guild.banner is not None:
             embed.set_thumbnail(url=interaction.guild.banner)
         embed.add_field(name="Owner", value=interaction.guild.owner)
@@ -93,14 +91,13 @@ class Info(commands.Cog):
         embed.add_field(name="Verification Level", value=interaction.guild.verification_level)
         await interaction.send(embed=embed)
 
-
     @nextcord.slash_command()
     async def afk(
         self,
         interaction: nextcord.Interaction,
         *,
-        reason = "Not provided."
-        ):
+        reason="Not provided."
+    ):
         """
         Go afk and optionally provide a reason.
         """
@@ -109,14 +106,14 @@ class Info(commands.Cog):
             afks.pop(member.id)
         else:
             try:
-                await member.edit(nick = f"(AFK) {member.display_name}")
+                await member.edit(nick=f"(AFK) {member.display_name}")
 
             except:
                 pass
 
         afks[member.id] = reason
         embed = nextcord.Embed(title=":zzz: Member AFK", description=f"{member} is AFK right now.", color=member.color)
-        embed.set_thumbnail(url = member.display_avatar)
+        embed.set_thumbnail(url=member.display_avatar)
         embed.add_field(name="AFK Note: ", value=reason)
         await interaction.send(embed=embed)
 
