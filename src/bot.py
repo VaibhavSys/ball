@@ -13,10 +13,10 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), intents=inten
 bot.db = db
 def create_connection():
     connection = psycopg2.connect(
-    host=hp.POSTGRESQL["host"],
-    database=hp.POSTGRESQL["database"],
-    user=hp.POSTGRESQL["user"],
-    password=hp.POSTGRESQL["password"]
+    host=hp.POSTGRESQL_HOST,
+    database=hp.POSTGRESQL_DATABASE,
+    user=hp.POSTGRESQL_USER,
+    password=hp.POSTGRESQL_PASSWORD
     )
     return connection
 bot.create_connection = create_connection
