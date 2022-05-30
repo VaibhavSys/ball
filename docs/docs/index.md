@@ -16,7 +16,7 @@ You can add our [public bot][1] and relax.
 
 ## Self-Hosting
 
-#### Environment Variables
+### Environment Variables
 - `TOKEN`: Discord Bot Token.
 - `RANDOMMER_API`: The API key for [randommer](https://randommer.io).
 - `POSTGRES_HOST`: The hostname for your [PostgreSQL][2] database.
@@ -38,3 +38,8 @@ $ poetry install
 $ poetry shell
 $ python3 src/bot.py
 ```
+
+### Hosting in cloud
+- Hosting on [Railway](/hosting/railway) (Recommended)
+- Hosting on [Heroku](/hosting/heroku)
+- Hosting on [Replit](/hosting/replit) (Discouraged)
