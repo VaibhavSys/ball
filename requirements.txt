@@ -1,7 +1,6 @@
 nextcord
 asyncio
-pymongo
-dnspython
 aiohttp
 aiodns
 cchardet
+psycopg2
