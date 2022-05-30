@@ -36,7 +36,7 @@ class Info(commands.Cog):
         member = member or interaction.user
         joined_at = member.joined_at.strftime("%d %B %Y, %I:%M %p")
         created_at = member.created_at.strftime("%d %B %Y, %I:%M %p")
-        
+
         embed = nextcord.Embed(
             title=f"UserInfo of {member}",
             colour=nextcord.Colour.green()

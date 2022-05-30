@@ -17,14 +17,14 @@ class Fun(commands.Cog):
     def __init__(
         self,
         bot
-        ):
+    ):
         self.bot = bot
 
     @nextcord.slash_command()
     async def jotd(
         self,
         interaction: nextcord.Interaction
-        ):
+    ):
         """
         Get joke of the day using jokes.one API.
         """
@@ -41,72 +41,68 @@ class Fun(commands.Cog):
                     return await interaction.send(response_json["error"]["message"])
                 print(jokes)
                 embed = nextcord.Embed(
-                title=jokes["title"],
-                colour=nextcord.Colour.green()
+                    title=jokes["title"],
+                    colour=nextcord.Colour.green()
                 )
             embed.set_footer(
                 text=f"Requested by {interaction.user}",
                 icon_url=interaction.user.display_avatar
-                )
+            )
             embed.description = f"{jokes['text']}\n-----\nProvided by https://jokes.one"
             await interaction.send(embed=embed)
-
 
     @nextcord.slash_command()
     async def name(
         self,
         interaction: nextcord.Interaction
-        ):
+    ):
         """
         Main command for other name subcommands.
         """
         pass
 
-
     @name.subcommand()
     async def fullname(
         self,
         interaction: nextcord.Interaction
-        ):
+    ):
         """
         Get a random fullname using randommer API.
         """
         name = await hp.request_randommer_name("fullname")
         await interaction.send(name)
 
-
     @name.subcommand()
     async def firstname(
         self,
         interaction: nextcord.Interaction
-        ):
+    ):
         """
         Get a random firstname using randommer API.
         """
         name = await hp.request_randommer_name("firstname")
         await interaction.send(name)
 
-
     @name.subcommand()
     async def surname(
         self,
         interaction: nextcord.Interaction
-        ):
+    ):
         """
         Get a random surname using randommer API.
         """
         name = await hp.request_randommer_name("surname")
         await interaction.send(name)
 
-
     @nextcord.slash_command()
     @application_checks.guild_only()
     @application_checks.check_any(application_checks.is_owner(),
-        application_checks.has_permissions(manage_messages=True))
+        application_checks.has_permissions(manage_messages=True)
+    )
     async def someone(
         self,
         interaction: nextcord.Interaction
-        ):
+    ):
         """
         Setup a role named 'someone' which randomly pings a human member.
         """
