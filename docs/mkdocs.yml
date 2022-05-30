@@ -2,3 +2,4 @@ site_name: Ball Documentation
 theme: readthedocs
 nav:
   - Home: index.md
+  - Hosting: hosting/
