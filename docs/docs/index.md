@@ -19,10 +19,10 @@ You can add our [public bot][1] and relax.
 ### Environment Variables
 - `TOKEN`: Discord Bot Token.
 - `RANDOMMER_API`: The API key for [randommer](https://randommer.io).
-- `POSTGRES_HOST`: The hostname for your [PostgreSQL][2] database.
-- `POSTGRES_DATABASE`: The name of your [PostgreSQL][2] database.
-- `POSTGRES_USER`: The username for your [PostgreSQL][2] database.
-- `POSTGRES_PASSWORD`: The password for your [PostgreSQL][2] database user.
+- `POSTGRESQL_HOST`: The hostname for your [PostgreSQL][2] database.
+- `POSTGRESQL_DATABASE`: The name of your [PostgreSQL][2] database.
+- `POSTGRESQl_USER`: The username for your [PostgreSQL][2] database.
+- `POSTGRESQL_PASSWORD`: The password for your [PostgreSQL][2] database user.
 
 [2]: https://www.postgresql.org/
 
