@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Hosting - Ball Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Hosting";
+        var mkdocs_page_input_path = "hosting/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Ball Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Hosting</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#creating-a-discord-bot-account">Creating a discord bot account</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#environment-variables">Environment Variables</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="railway/">Hosting (Railway)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="heroku/">Hosting (Heroku)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="replit">Hosting (Replit)</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Ball Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Hosting</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="prerequisites">Prerequisites</h1>
+<h2 id="creating-a-discord-bot-account">Creating a discord bot account</h2>
+<ol>
+<li>Create a <a href="https://discord.com/developers/applications">new application</a>.
+<img alt="create a new application" src="/img/prerequisites/new_application.png" /></li>
+<li>Give it a nice name and create.
+<img alt="give it a name" src="/img/prerequisites/name.png" /></li>
+<li>Click on the bot section.
+<img alt="click on the bot section" src="/img/prerequisites/bot_section.png" /></li>
+<li>Add a bot to your application.
+<img alt="add a bot" src="/img/prerequisites/add_bot.png" /></li>
+<li>Confirm.
+<img alt="confirm" src="/img/prerequisites/confirm.png" /></li>
+<li>Get the bot token.
+<img alt="reset token" src="/img/prerequisites/reset_token.png" /></li>
+<li>Confirm.
+<img alt="confirm reset token" src="/img/prerequisites/confirm_token.png" /></li>
+<li>Copy the token (The token shown in the image is not valid anymore).
+<img alt="copy token" src="/img/prerequisites/copy_token.png" /></li>
+<li>Scroll down and enable Server Members Intent and save changes.
+<img alt="enable server members intent" src="/img/prerequisites/enable_intent.png" /></li>
+<li>Click on the OAuth2 tab.
+<img alt="click on oauth2 tab" src="/img/prerequisites/oauth2_tab.png" /></li>
+<li>Click on Url Generator tab inside the OAuth2 tab.
+<img alt="click on url generator tab" src="/img/prerequisites/url_generator.png" /></li>
+<li>Select "bot" and "application.commands" scopes and "Administrator" permission (for the sake of getting started).
+<img alt="select &quot;bot&quot; and &quot;application.commands&quot; scopes and &quot;Administrator&quot; permission" src="/img/prerequisites/scopes_permissions.png" />  </li>
+<li>Scroll down and copy your generated URL.
+<img alt="scroll down and copy generated url" src="/img/prerequisites/copy_url.png" /></li>
+<li>Visit that URL and add the bot to your guild like shown <a href="/#adding-our-public-bot">here</a>.</li>
+<li>Add the bot token as a Environment Variable.</li>
+</ol>
+<h2 id="environment-variables">Environment Variables</h2>
+<ul>
+<li><code>TOKEN</code>: Discord Bot Token</li>
+<li><code>RANDOMMER_API</code>: The API key for <a href="https://randommer.io">randommer</a></li>
+<li><code>POSTGRESQL_HOST</code>: The hostname for your <a href="https://www.postgresql.org/">PostgreSQL</a> database</li>
+<li><code>POSTGRESQL_DATABASE</code>: The name of your <a href="https://www.postgresql.org/">PostgreSQL</a> database</li>
+<li><code>POSTGRESQl_USER</code>: The username for your <a href="https://www.postgresql.org/">PostgreSQL</a> database</li>
+<li><code>POSTGRESQL_PASSWORD</code>: The password for your <a href="https://www.postgresql.org/">PostgreSQL</a> database user</li>
+</ul>
+<h1 id="guides">Guides</h1>
+<ul>
+<li><a href="/hosting/local">Locally</a></li>
+<li><a href="/hosting/railway">Railway</a> (Recommended)</li>
+<li><a href="/hosting/heroku">Heroku</a></li>
+<li><a href="/hosting/replit">Replit</a> (Discouraged)</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="railway/" class="btn btn-neutral float-right" title="Hosting (Railway)">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="railway/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
