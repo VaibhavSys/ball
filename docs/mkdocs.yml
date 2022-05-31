@@ -2,4 +2,7 @@ site_name: Ball Documentation
 theme: readthedocs
 nav:
   - Home: index.md
-  - Hosting: hosting/
+  - Hosting: hosting/index.md
+  - Hosting (Railway): hosting/railway/index.md
+  - Hosting (Heroku): hosting/heroku/index.md
+  - Hosting (Replit): hosting/replit
