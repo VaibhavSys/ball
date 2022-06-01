@@ -466,7 +466,7 @@ class Mod(commands.Cog):
         await member.edit(nick=nick)
         await interaction.send(f"{interaction.user}({interaction.user.id}) changed {member}\'s nickname from \'{previous_nick}\' to '{nick}'. ")
 
-    @nextcord.slash_command(guild_ids=[923519688871411732, 975659726052413520])
+    @nextcord.slash_command()
     @application_checks.check_any(
         application_checks.is_owner(),
         application_checks.has_permissions(manage_messages=True)

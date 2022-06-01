@@ -2,7 +2,6 @@ import os
 import json
 import aiohttp
 import random
-from pprint import pprint
 import nextcord
 from nextcord.ext import commands, application_checks
 import nextcord.utils
@@ -39,7 +38,6 @@ class Fun(commands.Cog):
                     jokes = response_json["contents"]["jokes"][0]["joke"]
                 except KeyError:
                     return await interaction.send(response_json["error"]["message"])
-                print(jokes)
                 embed = nextcord.Embed(
                 title=jokes["title"],
                 colour=nextcord.Colour.green()
